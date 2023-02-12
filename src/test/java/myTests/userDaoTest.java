@@ -18,7 +18,7 @@ public class userDaoTest {
 
     @BeforeEach
     public void setUp(){
-        myUserDao = new UserDao();
+       // myUserDao = new UserDao();
         expected = 5;
 
     }
