@@ -1,0 +1,47 @@
+drop table if exists User;
+drop table if exists Person;
+drop table if exists Events;
+drop table if exists AuthorizationToken;
+
+
+create table User
+(
+	username varchar(255) not null,
+	password varchar(255) not null,
+	email varchar(255) not null,
+	firstName varchar(255) not null,
+	lastName varchar(255) not null,
+	gender varchar(255) not null,
+	personID varchar(255) not null
+);
+
+create table Person
+(
+	personID varchare(255) UNIQUE not null,
+	associatedUsername varchar(255) not null,
+	firstName varchar(255) not null,
+	lastName varchar(255) not null,
+	fatherID varchar(255) not null,
+	motherID varchar(255) not null,
+	spouseID varchar(255) not null
+);
+
+create table Events
+(
+	eventID varchar(255) UNIQUE not null,
+	associatedUsername varchar(255) not null,
+	personID varchar(255) not null,
+	latitude float not null,
+	longitude float not null,
+	country varchar(255) not null,
+	city varchar(255) not null,
+	eventType varchar(255),
+	year integer not null
+	
+);
+
+create table AuthorizationToken
+(
+	authtoken varchar(255) not null,
+	username varchar(255) not null
+);
