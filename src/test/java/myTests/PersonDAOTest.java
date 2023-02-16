@@ -65,6 +65,103 @@ public class PersonDAOTest {
         assertEquals(testPerson, compareTest);
     }
 
+    @Test
+    public void insertThreePersonsPass() throws DataAccessException {
+
+        //We'll create 2 new person objects (models) to insert. We alreaedy have the first from the set up method
+
+        Person secondTestPerson = new Person("myID","secondUsername","Kevin", "Worthen", "m", "FatherKevin","kevinSpouse", "peggyID");
+
+        Person thirdPersonTest = new Person("theProphetID", "prophetUserName","Russel", "Nelson","m","nelsonDad","NelsonMom","Wendy");
+
+        //insert all three users into database
+        ePerson.insert(testPerson); //from the set up method
+
+        ePerson.insert(secondTestPerson);
+
+        ePerson.insert(thirdPersonTest);
+
+        Person firstCompareTest = ePerson.find(testPerson.getPersonID());
+        assertNotNull(firstCompareTest);
+        assertEquals(testPerson, firstCompareTest);
+
+        Person secondCompareTest = ePerson.find(secondTestPerson.getPersonID());
+        assertNotNull(secondCompareTest);
+        assertEquals(secondTestPerson, secondCompareTest);
+
+        Person thirdCompareTest = ePerson.find(thirdPersonTest.getPersonID());
+        assertNotNull(thirdCompareTest);
+        assertEquals(thirdPersonTest, thirdCompareTest);
+
+    }
+
+    @Test
+    public void insertFail() throws DataAccessException{
+        ePerson.insert(testPerson);
+
+        assertThrows(DataAccessException.class, () -> ePerson.insert(testPerson)); //we'll get a unique constraint fail error but that is expected in this test
+    }
+
+    @Test
+    public void insertFailNullPerson()throws DataAccessException{
+
+        Person testPerson = new Person(null, null, null, null, null, null, null, null);
+
+        assertThrows(DataAccessException.class, () -> ePerson.insert(testPerson));
 
 
+
+    }
+
+    @Test
+    public void clearTableTest() throws DataAccessException, SQLException {
+
+        ePerson.insert(testPerson); //insert person object into the table
+
+        ePerson.clear(); //clear the table
+
+        Connection conn = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+
+            conn = db.getConnection();
+
+            // make a SELECT statement to see if the table is empty
+            statement = conn.createStatement();
+
+            resultSet = statement.executeQuery("SELECT COUNT(*) FROM PERSON");
+
+            resultSet.next();
+
+            int count = resultSet.getInt(1);
+
+            // check that the table is empty by checking to see that the count is 1
+            assertEquals(0, count);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Close the ResultSet and Statement (connection is handled in the after each teardown method
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+
+
+
+
+//end of class
 }
