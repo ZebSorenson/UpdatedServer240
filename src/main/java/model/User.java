@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 /**
  * User object to hold data of new user
  */
@@ -124,5 +126,13 @@ public class User {
 
     public void setPersonID(String personID) {
         this.personID = personID;
+    }
+
+    @Override
+    public boolean equals(Object o) { //double check this. Will be new for all model classes
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(gender, user.gender) && Objects.equals(personID, user.personID) ;
     }
 }

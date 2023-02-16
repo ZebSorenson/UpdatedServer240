@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 /**
  * Person model object to hold data of new person object
  */
@@ -7,13 +9,13 @@ public class Person {
     /**
      * String to hold unique person ID for new person object
      */
-    private String personID;
+    private  String personID;
 
     /**
      * String to hold username for new person object
      */
 
-    private String associatedUsername;
+    private  String associatedUsername;
 
     /**
      * String to hold firstName for new person object
@@ -138,4 +140,17 @@ public class Person {
     public void setSpouseID(String spouseID) {
         this.spouseID = spouseID;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(personID, person.personID) && Objects.equals(associatedUsername, person.associatedUsername) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(gender, person.gender) && Objects.equals(fatherID, person.fatherID) && Objects.equals(motherID, person.motherID) && Objects.equals(spouseID, person.spouseID);
+    }
+
+
+
+    //end of class
 }

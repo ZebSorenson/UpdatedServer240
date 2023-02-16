@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Connection;
+import java.sql.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,4 +75,53 @@ public class EventDAOTest {
         // instance of the class in the first parameter, which in this case is a DataAccessException.
         assertThrows(DataAccessException.class, () -> eDao.insert(bestEvent));
     }
+
+    @Test
+    public void clearTableTest() throws DataAccessException, SQLException {
+
+        eDao.insert(bestEvent); //insert Event object into the table
+
+        eDao.clear(); //clear the table
+
+        Connection conn = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+
+            conn = db.getConnection();
+
+            // Execute a SELECT statement to check if the table is empty
+            statement = conn.createStatement();
+
+            resultSet = statement.executeQuery("SELECT COUNT(*) FROM EVENTS");
+
+            resultSet.next();
+
+            int count = resultSet.getInt(1);
+
+            // Assert that the table is empty by checking to see that the count is 1
+            assertEquals(0, count);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Close the ResultSet and Statement (connection is handled in the after each teardown method
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+
+    //end of testing class
 }

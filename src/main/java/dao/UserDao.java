@@ -1,5 +1,6 @@
 package dao;
 
+import model.Event;
 import model.User;
 
 import java.sql.*;
@@ -50,7 +51,7 @@ public class UserDao {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataAccessException("Error encountered while inserting an event into the database");
+            throw new DataAccessException("Error encountered while inserting a USER (Always double check this)  into the database");
         }
 
 
@@ -58,30 +59,48 @@ public class UserDao {
 
     /**
      * Will return a specific user from the database
-     * @param paramater_personID a unique ID associated with the user in order to find it in the database
+     * @param personID a unique ID associated with the user in order to find it in the database
      * @return the user associated with the specified ID from the parameter
      */
-    public User find(String paramater_personID ){
+    public User find(String personID ) throws DataAccessException {
 
-        return null;
+        User user;
+        ResultSet rs;
+        String sql = "SELECT * FROM User WHERE personID = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, personID);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                user = new User(rs.getString("username"), rs.getString("password"),
+                        rs.getString("email"), rs.getString("firstName"), rs.getString("lastName"),
+                        rs.getString("gender"), rs.getString("personID"));
+                return user;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while finding a User from the Database (Always double check this code) in the database");
+        }
 
     }
 
     /**
      * will delete 1 specific user from the database
-     * @param parameter_userID the unique ID for the specified user from the database
+     *
      */
-    public void clear(String parameter_userID){
+    public void clear() throws DataAccessException {
+        String sql = "DELETE FROM User";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while clearing the User (always double check this) table");
+        }
 
     }
 
-    /**
-     * will clear all of the users from the database
-     */
-
-    public void clearAll(){
-
-    }
+   //possible add a method to delete just one user from the databse
 
 
 
