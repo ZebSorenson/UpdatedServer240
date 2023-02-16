@@ -66,7 +66,14 @@ public class PersonDAOTest {
     }
 
     @Test
-    public void insertThreePersonsPass() throws DataAccessException {
+    public void insertFail() throws DataAccessException{
+        ePerson.insert(testPerson);
+
+        assertThrows(DataAccessException.class, () -> ePerson.insert(testPerson)); //we'll get a unique constraint fail error but that is expected in this test
+    }
+
+    @Test
+    public void retrieveThreePersonPass() throws DataAccessException {
 
         //We'll create 2 new person objects (models) to insert. We alreaedy have the first from the set up method
 
@@ -95,20 +102,12 @@ public class PersonDAOTest {
 
     }
 
-    @Test
-    public void insertFail() throws DataAccessException{
-        ePerson.insert(testPerson);
 
-        assertThrows(DataAccessException.class, () -> ePerson.insert(testPerson)); //we'll get a unique constraint fail error but that is expected in this test
-    }
 
     @Test
-    public void insertFailNullPerson()throws DataAccessException{
+    public void retrieveNullPersonFail()throws DataAccessException{
 
-        Person testPerson = new Person(null, null, null, null, null, null, null, null);
-
-        assertThrows(DataAccessException.class, () -> ePerson.insert(testPerson));
-
+        assertNull(ePerson.find("not real person"));
 
 
     }
@@ -156,6 +155,8 @@ public class PersonDAOTest {
             }
         }
     }
+
+    //can also just run find on who you inserted...
 
 
 

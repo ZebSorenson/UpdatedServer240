@@ -2,13 +2,10 @@ package myTests;
 
 import dao.DataAccessException;
 import dao.Database;
-import dao.EventDao;
 import dao.UserDao;
 
-import model.Event;
 import model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 
 import org.junit.jupiter.api.BeforeEach;
 
@@ -74,7 +71,18 @@ public class UserDAOTest {
     }
 
     @Test
-    public void insertThreeUsersPass() throws DataAccessException{ //insert 3 users into the db and then check to make sure there is exactly 3 users in the user table
+    public void insertFail() throws DataAccessException{
+
+        //getting an exception when we try to insert twice (this is copied from the Events test example code that is given to us
+
+        user_dao.insert(myTestUser);
+
+        assertThrows(DataAccessException.class, () -> user_dao.insert(myTestUser));
+
+    }
+
+    @Test
+    public void insertAndFindThreeUsers() throws DataAccessException{ //insert 3 users into the db and then check to make sure there is exactly 3 users in the user table
 
 
         //create 2 new users (We already have the first from the set up before all method
@@ -108,19 +116,10 @@ public class UserDAOTest {
 
     }
 
-    @Test
-    public void insertFail() throws DataAccessException{
 
-        //getting an exception when we try to insert twice (this is copied from the Events test example code that is given to us
-
-        user_dao.insert(myTestUser);
-
-        assertThrows(DataAccessException.class, () -> user_dao.insert(myTestUser));
-
-    }
 
     @Test
-    public void insertFail_SameUserID() throws DataAccessException{
+    public void retrieveSameIDFail() throws DataAccessException{
         // we'll try to insert 2 users with all different attributes but have the same personID
 
         User firstTestUser = new User("ClaytonNation", "password_123","randomEmail@gmail.com","Clayton", "Young", "M", "1010");
