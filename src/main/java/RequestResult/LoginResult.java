@@ -4,7 +4,7 @@ package RequestResult;
  * Result object to be received after login request
  */
 
-public class LoginResponse {
+public class LoginResult {
 
     /**
      *  String to hold authtoken after login request

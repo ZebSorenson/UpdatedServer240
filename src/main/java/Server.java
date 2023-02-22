@@ -1,5 +1,7 @@
 import java.io.*;
 import java.net.*;
+
+import handler.LoginHandler;
 import handler.registerHandler;
 import handler.FileHandler;
 
@@ -72,8 +74,12 @@ public class Server {
         // forwards the request to the handler for that URL path.
         System.out.println("Creating contexts");
 
+        server.createContext("/", new FileHandler());
+
         //if we get a register request, we will forward the request to the appropriate handler
         server.createContext("/user/register", new registerHandler());
+
+        server.createContext("/user/login", new LoginHandler());
 
 
 
@@ -86,7 +92,7 @@ public class Server {
         // These are requests to download a file from the server
         // (e.g., web site files)
 
-       server.createContext("/", new FileHandler()); // delete this comment
+
 
 
 
@@ -114,6 +120,7 @@ public class Server {
     // on which the server should accept incoming client connections.
     public static void main(String[] args) {
         String portNumber = args[0];
+        System.out.println("Starting server on port "+portNumber);
         new Server().run(portNumber);
     }
 }
