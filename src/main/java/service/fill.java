@@ -24,6 +24,10 @@ public class fill {
 
     }
 
+    //just pass in a fill request objects
+
+    //will return the proper result object related to the service
+
 
 
 }

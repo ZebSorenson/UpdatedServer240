@@ -1,5 +1,6 @@
 package service;
 
+import RequestResult.eventResult;
 import model.Authtoken;
 import model.Event;
 
@@ -10,12 +11,12 @@ import model.Event;
 public class event {
 
     /**
-     * based on the given auth token, constructor will return  all family members of user based on auth token
+     * will perform the service of returning all of the family members of the current user
      * @param token token used to determine user on which the function will be called
-     * @return array of all events for all family members
+     * @return an eventResult object containing an array called data which is a list of all the events as well as a true boolean or an error message with false set
      */
 
-    public Event[] event(Authtoken token){
+    public eventResult event(Authtoken token){
         return null;
     }
 }

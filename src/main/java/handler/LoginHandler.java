@@ -1,10 +1,11 @@
 package handler;
 
 import RequestResult.LoginRequest;
+import RequestResult.LoginResult;
+import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import passoffresult.LoginResult;
 import service.LoginService;
 
 import java.io.IOException;
@@ -63,19 +64,24 @@ public class LoginHandler implements HttpHandler {
                         System.out.println(reqData);
 
 
+                        Gson gson = new Gson();
 
+                        LoginRequest request = (LoginRequest)gson.fromJson(reqData, LoginRequest.class); //turning json string into a request
 
-//						LoginRequest request = (LoginRequest)gson.fromJson(reqData, LoginRequest.class);
-//
-//						LoginService service = new LoginService();
-//						LoginResult result = service.login(request); // this may give you some info as to how the files work together
-//						exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-//						OutputStream resBody = exchange.getResponseBody();
-//						gson.toJson(result, resBody);
-//						resBody.close();
+						LoginService service = new LoginService();
 
+                        LoginResult result = service.login(request); // this may give you some info as to how the files work together
+                        //posbily come back here.
 
+                        // service.login(request);
 
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+
+                        OutputStream resBody = exchange.getResponseBody();
+
+                        gson.toJson(result); //may need response body? should work without but just in case.
+
+                        resBody.close();
 
 
                         // Start sending the HTTP response to the client, starting with
