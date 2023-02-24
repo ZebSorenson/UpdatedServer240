@@ -6,18 +6,18 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import dao.DataAccessException;
 import service.LoginService;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 
 
 public class LoginHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+
+
 
 
         // It is also unrealistic in that it accepts only one specific
@@ -50,7 +50,7 @@ public class LoginHandler implements HttpHandler {
                     // Verify that the auth token is the one we're looking for
                     // (this is not realistic, because clients will use different
                     // auth tokens over time, not the same one all the time).
-                    if (authToken.equals("afj232hj2332")) {
+                   // if (authToken.equals("afj232hj2332")) { // I don't need this correct?
 
                         // Extract the JSON string from the HTTP request body
 
@@ -59,6 +59,7 @@ public class LoginHandler implements HttpHandler {
 
                         // Read JSON string from the input stream
                         String reqData = readString(reqBody);
+
 
                         // Display/log the request JSON data
                         System.out.println(reqData);
@@ -70,8 +71,8 @@ public class LoginHandler implements HttpHandler {
 
 						LoginService service = new LoginService();
 
-                        LoginResult result = service.login(request); // this may give you some info as to how the files work together
-                        //posbily come back here.
+                        LoginResult result = service.login(request); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
+                        //if yes, then it will send back a result object with an Auth token
 
                         // service.login(request);
 
@@ -79,21 +80,26 @@ public class LoginHandler implements HttpHandler {
 
                         OutputStream resBody = exchange.getResponseBody();
 
-                        gson.toJson(result); //may need response body? should work without but just in case.
+                       String jSonResult = gson.toJson(result); //may need response body? should work without but just in case.
+
+                        writeString(jSonResult, resBody);
 
                         resBody.close();
 
 
                         // Start sending the HTTP response to the client, starting with
                         // the status code and any defined headers.
-                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-
-                        // We are not sending a response body, so close the response body
-                        // output stream, indicating that the response is complete.
-                        exchange.getResponseBody().close();
+//                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+//
+//                        // We are not sending a response body, so close the response body
+//                        // output stream, indicating that the response is complete.
+//                        exchange.getResponseBody().close();
 
                         success = true;
-                    }
+
+
+
+                   // } //put me back!!
                 }
             }
 
@@ -119,7 +125,11 @@ public class LoginHandler implements HttpHandler {
 
             // Display/log the stack trace
             e.printStackTrace();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
         }
+
+
     }
 
     /*
@@ -135,4 +145,16 @@ public class LoginHandler implements HttpHandler {
         }
         return sb.toString();
     }
+
+    private void writeString(String str, OutputStream os) throws IOException {
+        OutputStreamWriter sw = new OutputStreamWriter(os);
+        sw.write(str);
+        sw.flush();
+    }
+
+    //good idea to put these two above functions in a shared class for all to use
+
+
+
+    //end of class
 }

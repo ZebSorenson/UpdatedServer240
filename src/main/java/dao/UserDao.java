@@ -85,6 +85,78 @@ public class UserDao {
 
     }
 
+    public String findUsername(String userName) throws DataAccessException {
+
+        User user;
+        ResultSet rs;
+        String sql = "SELECT * FROM User WHERE userName = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, userName);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                user = new User(rs.getString("username"), rs.getString("password"),
+                        rs.getString("email"), rs.getString("firstName"), rs.getString("lastName"),
+                        rs.getString("gender"), rs.getString("personID"));
+                return user.getUsername();
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while finding a User from the Database (Always double check this code) in the database");
+        }
+
+    }
+
+    public String findPersonID(String userName) throws DataAccessException {
+        User user;
+        ResultSet rs;
+        String sql = "SELECT * FROM User WHERE userName = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, userName);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                user = new User(rs.getString("username"), rs.getString("password"),
+                        rs.getString("email"), rs.getString("firstName"), rs.getString("lastName"),
+                        rs.getString("gender"), rs.getString("personID"));
+                return user.getPersonID();
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while finding a User from the Database (Always double check this code) in the database");
+        }
+    }
+
+
+
+    public boolean verifyCredentials(String username, String password) throws DataAccessException {
+
+        ResultSet rs;
+        String sql = "SELECT * FROM User WHERE username = ? AND password = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while verifying User credentials in the database");
+        }
+
+    }
+
+
+
+
+
+
+
     /**
      * will delete 1 specific user from the database
      *
