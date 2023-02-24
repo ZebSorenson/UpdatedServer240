@@ -9,6 +9,7 @@ import model.Authtoken;
 import model.User;
 
 import java.sql.Connection;
+import java.util.UUID;
 
 /**
  * service object that will log the user in
@@ -47,16 +48,21 @@ public class LoginService {
 
         if(loginDataAccess.findUsername(userName)!=null){
             if(loginDataAccess.verifyCredentials(userName, passWord)){
+                UUID myUUID = UUID.randomUUID();
+                String newAuthToken = myUUID.toString();
                 //the username and password match!
                 System.out.println("They should match! If you've made it this far, things are going well");
                 System.out.println(userName+" "+passWord);
                 LoginResult returnResult = new LoginResult();
-                returnResult.setAuthtoken("afj232hj2332");
+                returnResult.setAuthtoken(newAuthToken);
                 returnResult.setUsername(userName);
                 returnResult.setPersonID(loginDataAccess.findPersonID(userName));
                 returnResult.setSuccess(true);
                 return returnResult;
             }
+            //check to see if the password is incorrect
+        }else if(loginDataAccess.find(userName)==null){
+            //we didn't find this user
         }
 
 
