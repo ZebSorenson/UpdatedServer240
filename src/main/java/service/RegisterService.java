@@ -1,0 +1,107 @@
+package service;
+
+import RequestResult.RegisterRequest;
+import RequestResult.RegisterResult;
+import dao.DataAccessException;
+import dao.Database;
+import dao.UserDao;
+import model.Authtoken;
+import model.User;
+
+import java.sql.Connection;
+import java.util.UUID;
+
+/**
+ * Creates a new user account (user row in the database)
+ */
+
+public class RegisterService {
+
+    Database db = new Database();
+
+    //do I need to place this dabatase in the functions?
+
+    //from the specs
+    //    Creates a new user account (user row in the database)
+    //    Generates 4 generations of ancestor data for the new user (just like the /fill endpoint if called with a generations value of 4 and this new user’s username as parameters)
+    //    Logs the user in
+    //    Returns an authtoken
+
+    /**
+     * Creates new user with the username passed in as a paramter
+     * @param username string to use the username of the new user object
+     * @return AuthToken unique auth token for the user when they are registered
+     */
+
+    public Authtoken  register(String username){
+
+        return null;
+    }
+
+    public RegisterResult register(RegisterRequest regReq) throws DataAccessException {
+
+        System.out.println("You have arrived at the register SERVICE function");
+
+        User registerUser = createUser(regReq);
+
+
+        Connection conn = db.getConnection();
+
+        try{
+
+            UserDao userDataAccess = new UserDao(conn);
+
+            userDataAccess.insert(registerUser);
+
+            String newAuthToken = UUID. randomUUID().toString();
+
+            RegisterResult returnResult = new RegisterResult();
+
+            //create the return object
+
+            returnResult.setAuthtoken(newAuthToken);
+
+            returnResult.setUsername(registerUser.getUsername());
+
+            returnResult.setPersonID(registerUser.getPersonID());
+
+            returnResult.setSuccess(true);
+
+            db.closeConnection(true);
+
+            return returnResult;
+
+
+        } catch (DataAccessException e) {
+            System.out.println("An error occurred in the Register service class in the register function ");
+            db.closeConnection(false);
+            RegisterResult returnResult = new RegisterResult();
+            returnResult.setMessage("Error trying to register the user");
+            returnResult.setSuccess(false);
+            throw new RuntimeException(e);
+        } catch(Exception ex){
+
+            ex.printStackTrace();
+            db.closeConnection(false);
+            RegisterResult returnResult = new RegisterResult();
+            returnResult.setMessage("Error trying to register the user");
+            returnResult.setSuccess(false);
+        }
+    return null;
+    }
+
+
+    private User createUser(RegisterRequest regReq){
+
+        String newPersonID = UUID.randomUUID().toString();
+
+        //create a new
+
+        User registerUser = new User(regReq.getUsername(), regReq.getPassword(), regReq.getEmail(), regReq.getFirstName(), regReq.getLastName(), regReq.getGender(), newPersonID);
+
+        return  registerUser;
+
+    }
+
+
+}

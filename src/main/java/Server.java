@@ -2,7 +2,7 @@ import java.io.*;
 import java.net.*;
 
 import handler.LoginHandler;
-import handler.registerHandler;
+import handler.RegisterHandler;
 import handler.FileHandler;
 
 import com.sun.net.httpserver.*;
@@ -77,7 +77,7 @@ public class Server {
         server.createContext("/", new FileHandler());
 
         //if we get a register request, we will forward the request to the appropriate handler
-        server.createContext("/user/register", new registerHandler());
+        server.createContext("/user/register", new RegisterHandler());
 
         server.createContext("/user/login", new LoginHandler());
 
