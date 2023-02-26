@@ -1,7 +1,7 @@
 package RequestResult;
 
 /**
- * Request object for logging in
+ * Request object sent to  Login service to act on
  */
 public class LoginRequest {
 

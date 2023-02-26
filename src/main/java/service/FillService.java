@@ -1,13 +1,16 @@
 package service;
 
 /**
- * service object that will populate the server's database with data for the username
+ * service object that will populate the server's database with data for the given username.
+ * Default will be 4 generations but can call fill with int param to specify how many generations the user would like
  */
-public class fill {
+public class FillService {
 
     /**
      * will add data for the username passed in
      * @param username specificed username for which to add data for
+     * This fill function will default to 4 generations as a specific is not given
+     * @return fillResult objectt containing info on whether or not service was successful
      */
 
     public void fill(String username){
@@ -15,9 +18,10 @@ public class fill {
     }
 
     /**
-     * Will perform same function as first constructor but with added option to place integer to identify how many generations of ancestors to be added
+     * Will perform same function as first fill but with added option to place integer to identify how many generations of ancestors to be added
      * @param username username of user to have data added to specify the number of generations of ancestors to be generated,
-     * @param generations
+     * @param generations specific number of generations of persons for the given username
+     * @return fillResult object containing info on whether or not service was succesful
      */
 
     public void fill(String username, Integer generations){

@@ -4,6 +4,8 @@ import model.Person;
 
 import java.util.UUID;
 
+
+
 public class GenerateTree {
 
     Person generatePerson(String gender, int generations ){

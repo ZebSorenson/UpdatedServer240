@@ -1,7 +1,8 @@
 package RequestResult;
 
+
 /**
- * Given as result of eventIDRequest
+ * Result containing info to send back to handler whether or not service is successful
  */
 
 public class eventIDResult {

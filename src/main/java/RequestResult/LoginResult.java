@@ -1,7 +1,8 @@
 package RequestResult;
 
+
 /**
- * Result object to be received after login request
+ * Result containing info to send back to handler whether or not service is successful
  */
 
 public class LoginResult {

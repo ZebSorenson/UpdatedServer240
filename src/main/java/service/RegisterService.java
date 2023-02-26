@@ -17,6 +17,10 @@ import java.util.UUID;
 
 public class RegisterService {
 
+    /**
+     * Database for us to establish a connection with
+     */
+
     Database db = new Database();
 
     //do I need to place this dabatase in the functions?
@@ -28,15 +32,13 @@ public class RegisterService {
     //    Returns an authtoken
 
     /**
-     * Creates new user with the username passed in as a paramter
-     * @param username string to use the username of the new user object
-     * @return AuthToken unique auth token for the user when they are registered
+     *
+     * @param regReq request object constaining info for the service to perform function with
+     * @return RegisterResult object containing info on whether or not the service was succesfull
+     * @throws DataAccessException
      */
 
-    public Authtoken  register(String username){
 
-        return null;
-    }
 
     public RegisterResult register(RegisterRequest regReq) throws DataAccessException {
 

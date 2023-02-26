@@ -13,6 +13,10 @@ import java.sql.*;
 
 public class UserDao {
 
+    /**
+     * connection object to connect to database
+     */
+
     private final Connection conn;
 
     public UserDao(Connection conn) {this.conn = conn;
@@ -20,9 +24,7 @@ public class UserDao {
 
     //pass in and recieve model objects back in return
 
-    public int getIntegerValue(){
-        return 5;
-    }
+
 
 
 
@@ -85,6 +87,13 @@ public class UserDao {
 
     }
 
+    /**
+     * Used to determine if the given username exists in the database
+     * @param userName username we want to determine exists or not in the database
+     * @return String of username we were looking for
+     * @throws DataAccessException
+     */
+
     public String findUsername(String userName) throws DataAccessException {
 
         User user;
@@ -108,6 +117,13 @@ public class UserDao {
 
     }
 
+    /**
+     * Used to find personID given a username
+     * @param userName username of user we want the ID for
+     * @return String of personID connected to user we are concerned with
+     * @throws DataAccessException
+     */
+
     public String findPersonID(String userName) throws DataAccessException {
         User user;
         ResultSet rs;
@@ -128,6 +144,14 @@ public class UserDao {
             throw new DataAccessException("Error encountered while finding a User from the Database (Always double check this code) in the database");
         }
     }
+
+    /**
+     * verifies that the given username and password are connected to one another
+     * @param username username we want to validate the password for
+     * @param password password to check if connects to given username
+     * @return true or false based on whether or not given usenrame and password relate
+     * @throws DataAccessException
+     */
 
 
 
@@ -158,7 +182,7 @@ public class UserDao {
 
 
     /**
-     * will delete 1 specific user from the database
+     * will delete all data from database
      *
      */
     public void clear() throws DataAccessException {
@@ -172,11 +196,5 @@ public class UserDao {
 
     }
 
-   //possible add a method to delete just one user from the databse
 
-
-
-    boolean login(String username, String password){
-        return false;
-    }
 }

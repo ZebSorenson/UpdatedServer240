@@ -4,7 +4,7 @@ package RequestResult;
  * Object to hold results of load Request in a response object
  */
 
-public class loadResponse {
+public class LoadResult {
 
     /**
      * String to hold message if error is encountered

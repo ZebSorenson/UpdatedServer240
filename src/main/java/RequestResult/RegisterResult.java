@@ -1,7 +1,7 @@
 package RequestResult;
 
 /**
- * Response of register request object
+ * Result containing info to send back to handler whether or service is successful
  */
 public class RegisterResult {
 

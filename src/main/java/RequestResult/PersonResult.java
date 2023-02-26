@@ -2,11 +2,12 @@ package RequestResult;
 
 import model.Person;
 
+
 /**
- * object to hold results after person request is called
+ * Result containing info to send back to handler whether or not service is successful
  */
 
-public class personResult {
+public class PersonResult {
 
     //array of person objects called data
 

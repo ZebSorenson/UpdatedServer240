@@ -17,6 +17,10 @@ import java.util.UUID;
 
 public class LoginService {
 
+    /**
+     * Database for us to establish a connection with
+     */
+
     Database db = new Database();
 
 
@@ -25,6 +29,13 @@ public class LoginService {
     //using the databse you'll create DAOs to interact with the objectsa
     //this is because thhe constructor of the DAO takes a connection object. So create instance here.
     //DAO can't do anything with DB connection.
+
+    /**
+     *
+     * @param loginReq request object containing info for the service to perform function on
+     * @return loginResult object containing info on whether or not the service was succesfull
+     * @throws DataAccessException
+     */
 
 
     public LoginResult login(LoginRequest loginReq) throws DataAccessException {

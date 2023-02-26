@@ -2,8 +2,9 @@ package RequestResult;
 
 import model.Event;
 
+
 /**
- * Returned as result of and event request
+ * Result containing info to send back to handler whether or not service is successful
  */
 
 public class eventResult {

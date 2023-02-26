@@ -1,7 +1,8 @@
 package RequestResult;
 
+
 /**
- * result object to hold results from personID request
+ * Result containing info to send back to handler whether or not service is successful
  */
 
 public class personIDResult {

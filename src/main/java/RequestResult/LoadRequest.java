@@ -5,9 +5,9 @@ import model.Person;
 import model.User;
 
 /**
- * Object used to carry out load request
+ * Load request containing info for the load service object to act on
  */
-public class loadRequest {
+public class LoadRequest {
 
     //array of users
     //array of persons

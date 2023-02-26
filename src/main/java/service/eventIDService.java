@@ -2,18 +2,17 @@ package service;
 
 import RequestResult.eventIDResult;
 import model.Authtoken;
-import model.Event;
 
 /**
- * Gets the single event object in the result if it successfully performs the service
+ * Returns the single Event object with the specified ID (if the event is associated with the current user). The current user is determined by the provided authtoken
  */
 
-public class eventID {
+public class eventIDService {
 
     /**
      * Will return specific single event based on the specified ID
      * @param token used to determine which user to perform function with
-     * @return the even determined by function use
+     * @return an eventIDResult object containing the event data if the service is successful and error info if not
      */
 
     public eventIDResult eventID(Authtoken token){

@@ -1,7 +1,8 @@
 package RequestResult;
 
+
 /**
- * Creates the data for the result post clear
+ * Result containing info to send back to handler whether or not service is successful
  */
 
 public class clearResult {

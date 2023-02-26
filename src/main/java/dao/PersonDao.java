@@ -11,6 +11,10 @@ import java.sql.*;
 
 public class PersonDao {
 
+ /**
+  * connection object for connecting to the database
+  */
+
    private final Connection conn;
 
     public PersonDao(Connection conn) {

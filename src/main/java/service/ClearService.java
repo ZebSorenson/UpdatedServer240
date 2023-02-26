@@ -2,21 +2,20 @@ package service;
 
 import RequestResult.clearRequest;
 import RequestResult.clearResult;
-import dao.Database;
 
 
 /**
  * Service object that will perform the action of deleting all data from the database, including user, authtoken, person, and event data
  */
-public class clear {
+public class ClearService {
 
     /**
      * clears ALL data from database
-     * @param clear_request the request object containing the needed info to perform the requested service
-     * @return based on whether the service was successful or not, we will return a result object holding that info
+     * @param clearReq the request object containing the needed info to perform the requested service. This is coming from the http handler
+     * @return clearResult object containing info depending on whether or not the service was successful
      */
 
-    public clearResult clear(clearRequest clear_request){
+    public clearResult clear(clearRequest clearReq){
 
     clearResult resultToreturn = new clearResult();
 

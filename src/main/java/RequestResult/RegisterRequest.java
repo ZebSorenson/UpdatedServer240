@@ -1,7 +1,7 @@
 package RequestResult;
 
 /**
- * request object for when register is called
+ * request object for when register service is called
  */
 
 public class RegisterRequest {
