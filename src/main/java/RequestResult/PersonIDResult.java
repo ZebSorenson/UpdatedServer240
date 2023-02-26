@@ -5,7 +5,7 @@ package RequestResult;
  * Result containing info to send back to handler whether or not service is successful
  */
 
-public class personIDResult {
+public class PersonIDResult {
 
     /**
      * String to hold associatedUsername after personID request

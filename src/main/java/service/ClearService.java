@@ -1,7 +1,7 @@
 package service;
 
-import RequestResult.clearRequest;
-import RequestResult.clearResult;
+import RequestResult.ClearRequest;
+import RequestResult.ClearResult;
 
 
 /**
@@ -15,9 +15,9 @@ public class ClearService {
      * @return clearResult object containing info depending on whether or not the service was successful
      */
 
-    public clearResult clear(clearRequest clearReq){
+    public ClearResult clear(ClearRequest clearReq){
 
-    clearResult resultToreturn = new clearResult();
+    ClearResult resultToreturn = new ClearResult();
 
     return resultToreturn;
     }

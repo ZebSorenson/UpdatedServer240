@@ -5,7 +5,7 @@ package RequestResult;
  * Result containing info to send back to handler whether or not service is successful
  */
 
-public class fillResult {
+public class FillResult {
 
     /**
      * Message to be diplayed if error is recieved in result

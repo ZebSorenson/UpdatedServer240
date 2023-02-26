@@ -7,7 +7,7 @@ import model.Event;
  * Result containing info to send back to handler whether or not service is successful
  */
 
-public class eventResult {
+public class EventResult {
 
     //array of json events called data
 

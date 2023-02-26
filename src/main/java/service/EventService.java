@@ -1,6 +1,6 @@
 package service;
 
-import RequestResult.eventResult;
+import RequestResult.EventResult;
 import model.Authtoken;
 
 /**
@@ -15,7 +15,7 @@ public class EventService {
      * @return an eventResult object containing an array called data which is a list of all the events as well as a true boolean or an error message with false set
      */
 
-    public eventResult event(Authtoken token){
+    public EventResult event(Authtoken token){
         return null;
     }
 }
