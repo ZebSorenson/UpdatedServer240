@@ -7,19 +7,34 @@ import com.google.gson.JsonSyntaxException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.ArrayList;
 
 public class fnameGenerator {
 
+    ArrayList<String> femaleNameListArray = new ArrayList<>();
 
-    public fnamesData getFemaleNameList() throws FileNotFoundException {
+
+    public ArrayList<String> getFemaleNameList() throws FileNotFoundException {
         try{
-            Reader reader = new FileReader("fnames.json");
+            Reader reader = new FileReader("json/fnames.json");
 
             Gson gson = new Gson();
 
             fnamesData fnameList = (fnamesData) gson.fromJson(reader, fnamesData.class); //is this filling the array with location objects?
 
-            return fnameList;
+//            System.out.println(fnameList);
+//
+//            return fnameList;
+
+            for(String fname: fnameList.getData()){
+
+                femaleNameListArray.add(fname);
+
+            }
+
+            System.out.println(femaleNameListArray);
+
+            return femaleNameListArray;
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -29,4 +44,6 @@ public class fnameGenerator {
             throw new RuntimeException(e);
         }
     }
+
+
 }

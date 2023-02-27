@@ -2,5 +2,11 @@ package JSonMagic.json;
 
 public class fnamesData {
 
-    fname[] data;
+    String[] data;
+
+    public String[] getData() {
+        return data;
+    }
+
+
 }

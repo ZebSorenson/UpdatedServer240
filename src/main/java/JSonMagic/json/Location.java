@@ -6,9 +6,25 @@ public class Location {
 
     String city;
 
-    String latitude;
+    float latitude;
 
-    String longitude;
+    float longitude;
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
 }
 
 

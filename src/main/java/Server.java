@@ -1,9 +1,13 @@
 import java.io.*;
 import java.net.*;
 
+import JSonMagic.json.Location;
+import JSonMagic.json.LocationsGenerator;
 import handler.LoginHandler;
 import handler.RegisterHandler;
 import handler.FileHandler;
+
+import JSonMagic.json.fnameGenerator;
 
 import com.sun.net.httpserver.*;
 
@@ -48,6 +52,8 @@ public class Server {
         // inside the server, which can be useful for diagnosing problems
         // that may occur.
         System.out.println("Initializing HTTP Server");
+
+
 
         try {
             // Create a new HttpServer object.
@@ -118,10 +124,26 @@ public class Server {
     // "main" method for the server program
     // "args" should contain one command-line argument, which is the port number
     // on which the server should accept incoming client connections.
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         String portNumber = args[0];
         System.out.println("Starting server on port "+portNumber);
         new Server().run(portNumber);
+
+//
+//        fnameGenerator names = new fnameGenerator();
+//
+//        names.getFemaleNameList();
+//
+//        LocationsGenerator locs = new LocationsGenerator();
+//
+//
+//
+//        locs.getLocationList();
+//
+//        for(Location location: locs.getLocationList()){
+//            System.out.println(location.getCity());
+//            System.out.println(location.getLatitude());
+//        }
     }
 }
 
