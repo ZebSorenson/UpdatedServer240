@@ -9,6 +9,7 @@ import model.Authtoken;
 import model.User;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -23,12 +24,19 @@ public class LoginService {
 
     Database db = new Database();
 
+    Connection loginConnection = null;
+
+//    public LoginService(Connection conn) {
+//        this.loginConnection =conn;
+//    }
 
 
-    //create database object here!!!
+//create database object here!!!
     //using the databse you'll create DAOs to interact with the objectsa
     //this is because thhe constructor of the DAO takes a connection object. So create instance here.
     //DAO can't do anything with DB connection.
+
+
 
     /**
      *
@@ -38,19 +46,17 @@ public class LoginService {
      */
 
 
-    public LoginResult login(LoginRequest loginReq) throws DataAccessException {
+    public LoginResult login(LoginRequest loginReq) throws DataAccessException, SQLException {
 
-
+        //may need to handle something that is not formated correctly
+        //am I handling the connection correctly??? With commits and rollbacks?
 
         Connection conn = db.getConnection();
 
+        LoginResult returnResult = new LoginResult();
+
         UserDao loginDataAccess = new UserDao(conn);
 
-        User testUser = new User("zebulon", "password123","randomEmail@gmail.com","Clayton", "Young", "M", "1010");
-        loginDataAccess.insert(testUser);
-        //can use a helper function with password and username
-
-        //find function based off username (probs won't use personID)...take a username...Can then validate in the DAO or here in the service
 
         String userName = loginReq.getUsername();
         String passWord = loginReq.getPassword();
@@ -64,16 +70,30 @@ public class LoginService {
                 //the username and password match!
                 System.out.println("They should match! If you've made it this far, things are going well");
                 System.out.println(userName+" "+passWord);
-                LoginResult returnResult = new LoginResult();
+//                LoginResult returnResult = new LoginResult();
                 returnResult.setAuthtoken(newAuthToken);
                 returnResult.setUsername(userName);
                 returnResult.setPersonID(loginDataAccess.findPersonID(userName));
                 returnResult.setSuccess(true);
+                conn.commit();
                 return returnResult;
             }
             //check to see if the password is incorrect
+
+            else if(!loginDataAccess.verifyCredentials(userName, passWord)){
+
+                returnResult.setSuccess(false);
+                returnResult.setMessage("Error: incorrect password");
+                conn.rollback();
+                return returnResult;
+
+
+            }
         }else if(loginDataAccess.find(userName)==null){
-            //we didn't find this user
+            returnResult.setSuccess(false);
+            returnResult.setMessage("Error: invalid username or password");
+            conn.rollback();
+            return returnResult;
         }
 
 
@@ -84,11 +104,6 @@ public class LoginService {
 
         //how do we get the username and password out of this loginrequst?
 
-
-
-
-
-        loginDataAccess.clear();
 
         return null;
     }

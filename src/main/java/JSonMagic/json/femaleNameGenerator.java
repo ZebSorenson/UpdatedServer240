@@ -9,7 +9,7 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
 
-public class fnameGenerator {
+public class femaleNameGenerator {
 
     ArrayList<String> femaleNameListArray = new ArrayList<>();
 
@@ -20,7 +20,7 @@ public class fnameGenerator {
 
             Gson gson = new Gson();
 
-            fnamesData fnameList = (fnamesData) gson.fromJson(reader, fnamesData.class); //is this filling the array with location objects?
+            femaleNameData fnameList = (femaleNameData) gson.fromJson(reader, femaleNameData.class); //is this filling the array with location objects?
 
 //            System.out.println(fnameList);
 //

@@ -1,11 +1,16 @@
 package service;
 
+import JSonMagic.json.Location;
+import JSonMagic.json.LocationsGenerator;
+import JSonMagic.json.maleNameGenerator;
 import dao.DataAccessException;
-import dao.Database;
 import dao.PersonDao;
+import model.Event;
 import model.Person;
 
+import java.io.FileNotFoundException;
 import java.sql.Connection;
+import java.util.Random;
 import java.util.UUID;
 
 //in the register service, create the database connection and then pass it into this class
@@ -14,7 +19,7 @@ import java.util.UUID;
 
 
 
-public class GenerateTree {
+public class TreeGenerator {
 
     Connection myConnection = null;
     String userName = null;
@@ -23,7 +28,7 @@ public class GenerateTree {
 
     int numEvents = 0;
 
-    public GenerateTree(Connection conn, String userName) {
+    public TreeGenerator(Connection conn, String userName) {
 
         this.myConnection = conn;
         this.userName = userName;
@@ -48,11 +53,19 @@ public class GenerateTree {
 
             father.setSpouseID(mother.getPersonID());
 
+            //create the rest of the person information, names with the Json info before inserting them info the database
+
             personDataAccess.insert(mother); // put all of service in a try
 
             personDataAccess.insert(father);
 
+
+
             numPeople+=2;
+
+
+
+            //add the marriage events here. This is where you will use the jSon data you were able to retrieve
 
             //one UUID for the eventID. Might need to insert it twice want everything to match up
             //last thing here is to make the marriage event. Get UUID for marrriage event for each of them
@@ -91,6 +104,37 @@ public class GenerateTree {
 
        // Person person = new Person(UUID.randomUUID().toString(), )
      return null;
+    }
+
+//    private Event generateMarriageEvent(String eventID) throws FileNotFoundException {
+//
+//        LocationsGenerator locs = new LocationsGenerator();
+//
+//        int max = locs.getLocationList().size(); //this is how far we can go in our random generation
+//
+//        int randomLocationIndex = new Random().nextInt(max);
+//
+//        Event marriageEvent = new Event(UUID.randomUUID().toString(),)
+//
+//
+//
+//
+//    }
+
+
+    private void generatePersonMale(Person person) throws FileNotFoundException { // probably want to take in 2 people object so that things can match up
+
+        maleNameGenerator maleNames = new maleNameGenerator();
+
+        int max = maleNames.getMaleNameArray().size();
+
+        int randomNameIndex = new Random().nextInt(0,max); //arrays start at 0 in Java, right?
+
+        //last name
+
+        person.setFirstName(maleNames.getMaleNameArray().get(randomNameIndex));
+
+
     }
 
 

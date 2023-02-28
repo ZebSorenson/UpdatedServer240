@@ -1,6 +1,6 @@
 package JSonMagic.json;
 
-public class fname {
+public class femaleName {
 
     String fname;
 }

@@ -11,6 +11,7 @@ import service.LoginService;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.sql.SQLException;
 
 
 public class LoginHandler implements HttpHandler {
@@ -126,6 +127,8 @@ public class LoginHandler implements HttpHandler {
             // Display/log the stack trace
             e.printStackTrace();
         } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 

@@ -1,6 +1,6 @@
 package JSonMagic.json;
 
-public class fnamesData {
+public class femaleNameData {
 
     String[] data;
 

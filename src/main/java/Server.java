@@ -1,13 +1,10 @@
 import java.io.*;
 import java.net.*;
 
-import JSonMagic.json.Location;
-import JSonMagic.json.LocationsGenerator;
+import JSonMagic.json.*;
 import handler.LoginHandler;
 import handler.RegisterHandler;
 import handler.FileHandler;
-
-import JSonMagic.json.fnameGenerator;
 
 import com.sun.net.httpserver.*;
 
@@ -129,11 +126,11 @@ public class Server {
         System.out.println("Starting server on port "+portNumber);
         new Server().run(portNumber);
 
-//
-//        fnameGenerator names = new fnameGenerator();
+
+//        femaleNameGenerator names = new femaleNameGenerator();
 //
 //        names.getFemaleNameList();
-//
+
 //        LocationsGenerator locs = new LocationsGenerator();
 //
 //
@@ -144,6 +141,18 @@ public class Server {
 //            System.out.println(location.getCity());
 //            System.out.println(location.getLatitude());
 //        }
+
+//        maleNameGenerator maleNames = new maleNameGenerator();
+//
+//        maleNames.getMaleNameArray();
+
+//        sirNameGenerator sirnames = new sirNameGenerator();
+//
+//        sirnames.getSireNameList();
+
+
+
+
     }
 }
 
