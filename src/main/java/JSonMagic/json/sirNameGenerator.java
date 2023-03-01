@@ -29,7 +29,7 @@ public class sirNameGenerator {
 
             }
 
-            System.out.println(sirNameArray);
+          //  System.out.println(sirNameArray);
 
             return sirNameArray;
 

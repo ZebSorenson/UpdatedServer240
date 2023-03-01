@@ -9,6 +9,7 @@ import model.Authtoken;
 import model.User;
 
 import java.sql.Connection;
+import java.time.Year;
 import java.util.UUID;
 
 /**
@@ -53,6 +54,8 @@ public class RegisterService {
 
             UserDao userDataAccess = new UserDao(conn);
 
+            userDataAccess.clear(); //DELETE ME LATER
+
             userDataAccess.insert(registerUser);
 
             String newAuthToken = UUID. randomUUID().toString();
@@ -68,6 +71,10 @@ public class RegisterService {
             returnResult.setPersonID(registerUser.getPersonID());
 
             returnResult.setSuccess(true);
+
+//            TreeGenerator registerTree = new TreeGenerator(conn, returnResult.getUsername()); // creating our tree generator
+//            //giving our tree generator our connection to the database and the username for which we're creating the tree
+//            registerTree.generatePerson(regReq.getGender(), 4, Year.now().getValue());
 
             db.closeConnection(true);
 

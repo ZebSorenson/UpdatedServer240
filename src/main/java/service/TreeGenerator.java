@@ -1,9 +1,8 @@
 package service;
 
-import JSonMagic.json.Location;
-import JSonMagic.json.LocationsGenerator;
-import JSonMagic.json.maleNameGenerator;
+import JSonMagic.json.*;
 import dao.DataAccessException;
+import dao.EventDao;
 import dao.PersonDao;
 import model.Event;
 import model.Person;
@@ -35,29 +34,56 @@ public class TreeGenerator {
 
     }
 
-    Person generatePerson(String gender, int generations, int year ) throws DataAccessException {
+    Person generatePersonTree(String gender, int generations, int year ) throws DataAccessException, FileNotFoundException {
 
        PersonDao personDataAccess = new PersonDao(myConnection);
+        EventDao eventDataAccess = new EventDao(myConnection);
 
         Person mother = null;
 
         Person father = null;
 
         if(generations>1){
-            mother = generatePerson("f", generations-1, 10); // adjust reasonable year
-            father = generatePerson("m", generations-1, 10);
 
-          //  String spouseID = UUID.randomUUID().toString();
+            mother = generatePersonTree("f", generations-1, year+25); // adjust reasonable year
+            father = generatePersonTree("m", generations-1, year+25);
+
+             mother.setGender("f");
+             father.setGender("m");
+
 
             mother.setSpouseID(father.getPersonID());
 
             father.setSpouseID(mother.getPersonID());
+
+            setMaleRandomName(father);
+
+            setRandomFemaleFirstName(mother);
+            mother.setLastName(father.getLastName());//father and mother will have last name
+
+            //set the usernames
+
+            father.setAssociatedUsername(userName);
+            mother.setAssociatedUsername(userName);
+
+            //create the marriage event
+
+            Event fatherMarriage = generateMarriageEvent(userName, father.getPersonID(), year -50);
+            Event motherMarriage = fatherMarriage; //we do this so that all the needed info matches up.
+            motherMarriage.setPersonID(mother.getPersonID()); //we can first set the mother's marriage event to the father and then change ID and eventID
+            motherMarriage.setEventID(UUID.randomUUID().toString()); // give the mother marriage event a unique ID
+
+
+
 
             //create the rest of the person information, names with the Json info before inserting them info the database
 
             personDataAccess.insert(mother); // put all of service in a try
 
             personDataAccess.insert(father);
+
+            eventDataAccess.insert(motherMarriage); // insert the mother marriage event into the database
+            eventDataAccess.insert(fatherMarriage); //insert the father marriage event into the database
 
 
 
@@ -78,7 +104,9 @@ public class TreeGenerator {
             //after you've made the events, call the event dao and add them to the databas
 
             //add the marriage events that need to be in sync
-        }
+
+
+        } //this is the end of the if statement
 
         //exit if stament and create the person
 
@@ -89,12 +117,12 @@ public class TreeGenerator {
         //events, check the gender of the person. this will determine what list you will pull from
         //save the person in the person in the database
 
-        //if the father is null, not going further back set the parent ID's to
+        //if the father is null, not going further back set the parent ID's to null. We've reached the end of the recusrsion
         //This will be the base case for as far back as we go
 
         //create their birth events, eventID and the event itself, insert into the database and incriment the events added
         //same thing with the death of the person. This will be an event in itself
-        //birth event, just pass in the year and then
+        //birth event, just pass in the year and then subtract a certain amount -20?
 
         //create the person and return it.
 
@@ -102,37 +130,81 @@ public class TreeGenerator {
 
 
 
-       // Person person = new Person(UUID.randomUUID().toString(), )
+       //how do I handle creating the attributes of the person? we could get all of the info from the Register request object
+        //but I don't know how we would handle this with the fill API
+        //Update, fill API comes with the username that is already in the database
+
+
+
      return null;
     }
 
-//    private Event generateMarriageEvent(String eventID) throws FileNotFoundException {
-//
-//        LocationsGenerator locs = new LocationsGenerator();
-//
-//        int max = locs.getLocationList().size(); //this is how far we can go in our random generation
-//
-//        int randomLocationIndex = new Random().nextInt(max);
-//
-//        Event marriageEvent = new Event(UUID.randomUUID().toString(),)
-//
-//
-//
-//
-//    }
+    private Event generateMarriageEvent(String associatedUsername, String personID, int yearParam) throws FileNotFoundException {
+
+        LocationsGenerator locs = new LocationsGenerator();
+
+        int max = locs.getLocationList().size(); //this is how far we can go in our random generation
+
+        int randomLocationIndex = new Random().nextInt(max);
+
+        float latitude = locs.getLocationList().get(randomLocationIndex).getLatitude();
+        float longitude = locs.getLocationList().get(randomLocationIndex).getLongitude();
+        String country = locs.getLocationList().get(randomLocationIndex).getCountry();
+        String city = locs.getLocationList().get(randomLocationIndex).getCity();
+        String eventType = "marriage";
+        int year = yearParam;
+
+        Event marriageEvent = new Event(UUID.randomUUID().toString(),associatedUsername,personID,latitude,longitude,country,city,eventType, year);
+
+        return marriageEvent;
 
 
-    private void generatePersonMale(Person person) throws FileNotFoundException { // probably want to take in 2 people object so that things can match up
 
+
+
+
+    }
+
+
+    private void setMaleRandomName(Person father) throws FileNotFoundException { //setting first and last name to random index in JSon name files
+
+        //first name
         maleNameGenerator maleNames = new maleNameGenerator();
 
         int max = maleNames.getMaleNameArray().size();
 
-        int randomNameIndex = new Random().nextInt(0,max); //arrays start at 0 in Java, right?
+        Random randomFirstName = new Random();
 
+        int randomNameIndex = randomFirstName.nextInt(max+1); //arrays start at 0 in Java, right?
+
+        father.setFirstName(maleNames.getMaleNameArray().get(randomNameIndex));
         //last name
 
-        person.setFirstName(maleNames.getMaleNameArray().get(randomNameIndex));
+        sirNameGenerator lastNames = new sirNameGenerator();
+
+        int maxLastName = lastNames.getSireNameList().size();
+
+        Random randomLastName = new Random();
+
+        int randomLastNameIndex = randomLastName.nextInt( maxLastName+1);
+
+        father.setLastName(lastNames.getSireNameList().get(randomNameIndex));
+
+    }
+
+    private void setRandomFemaleFirstName(Person mother) throws FileNotFoundException {
+
+        femaleNameGenerator femaleNames = new femaleNameGenerator();
+
+        int max = femaleNames.getFemaleNameList().size();
+
+        Random randomFirstName = new Random();
+
+        int randomFirstNameIndex = randomFirstName.nextInt(max+1);
+
+        mother.setFirstName(femaleNames.getFemaleNameList().get(randomFirstNameIndex));
+
+
 
 
     }

@@ -32,7 +32,7 @@ public class femaleNameGenerator {
 
             }
 
-            System.out.println(femaleNameListArray);
+           // System.out.println(femaleNameListArray);
 
             return femaleNameListArray;
 

@@ -33,7 +33,7 @@ public class maleNameGenerator {
 
             }
 
-            System.out.println(maleNameArray);
+          //  System.out.println(maleNameArray);
 
             return maleNameArray;
 
