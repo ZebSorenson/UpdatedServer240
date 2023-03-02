@@ -180,7 +180,7 @@ public class TreeGenerator {
             currPerson.setFatherID(father.getPersonID());
             currPerson.setMotherID(mother.getPersonID());
 
-            //create the events for the people
+            //create the events for the people...This is where you will call your make event functions for mom and dad...
             createParents(mother, currentGeneration-1, personDataAccess); // adjust reasonable year
 
             createParents(father, currentGeneration-1, personDataAccess);
@@ -201,3 +201,13 @@ public class TreeGenerator {
 
 //need to have base case of if the father/mother is null, we have reached the end.
 }
+
+//function that makes a birth and a death
+//other that makes marriage, birth and death
+//make a function called make events...make a marriage event, make birth, make death...
+
+//have the second create event function take in an event and then set the new person to the marriage event.
+
+//then call make events every time in cr
+
+
