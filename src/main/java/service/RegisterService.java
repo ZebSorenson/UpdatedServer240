@@ -76,10 +76,12 @@ public class RegisterService {
             returnResult.setSuccess(true);
 
             TreeGenerator registerTree = new TreeGenerator(conn, returnResult.getUsername()); // creating our tree generator
-            //giving our tree generator our connection to the database and the username for which we're creating the tree
-            Person userPerson = registerTree.generatePersonTree(regReq.getGender(), 1, Year.now().getValue());
+            //giving our tree generator our connection to the database and the username for which we're creating the tree\
+
+
+            Person userPerson = registerTree.generatePersonTree(regReq.getGender(), 2, Year.now().getValue());
             //set the rest of the atributes of the person right here before inserting!!!!! Need a complete person!!!
-            dataAccessPerson.insert(userPerson);
+            // dataAccessPerson.insert(userPerson);
 
             db.closeConnection(true);
 
@@ -116,6 +118,8 @@ public class RegisterService {
         return  registerUser;
 
     }
+
+
 
 
 }

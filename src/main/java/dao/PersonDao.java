@@ -85,6 +85,28 @@ public class PersonDao {
      }
     }
 
+ public Boolean findTrue(String personID) throws DataAccessException {
+
+  Person person;
+  ResultSet rs;
+  String sql = "SELECT * FROM Person WHERE personID = ?;";
+  try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+   stmt.setString(1, personID);
+   rs = stmt.executeQuery();
+   if (rs.next()) {
+    person = new Person(rs.getString("personID"), rs.getString("AssociatedUsername"),
+            rs.getString("firstName"), rs.getString("lastName"), rs.getString("gender"),
+            rs.getString("fatherID"), rs.getString("motherID"), rs.getString("spouseID"));
+    return true;
+   } else {
+    return false;
+   }
+  } catch (SQLException e) {
+   e.printStackTrace();
+   throw new DataAccessException("Error encountered while finding an event in the database");
+  }
+ }
+
     /**
      * Will delete a person from the database bassed on their unique ID
      * @param personID_String a unique ID used for identifying a specific person in the database

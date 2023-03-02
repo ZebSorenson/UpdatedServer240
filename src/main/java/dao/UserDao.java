@@ -87,6 +87,30 @@ public class UserDao {
 
     }
 
+
+    public User findUser(String userName ) throws DataAccessException {
+
+        User user;
+        ResultSet rs;
+        String sql = "SELECT * FROM User WHERE username = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, userName);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                user = new User(rs.getString("username"), rs.getString("password"),
+                        rs.getString("email"), rs.getString("firstName"), rs.getString("lastName"),
+                        rs.getString("gender"), rs.getString("personID"));
+                return user;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while finding a User from the Database (Always double check this code) in the database");
+        }
+
+    }
+
     /**
      * Used to determine if the given username exists in the database
      * @param userName username we want to determine exists or not in the database

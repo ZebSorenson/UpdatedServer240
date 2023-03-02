@@ -1,11 +1,10 @@
 package service;
 
 import JSonMagic.json.*;
-import dao.DataAccessException;
-import dao.EventDao;
-import dao.PersonDao;
+import dao.*;
 import model.Event;
 import model.Person;
+import model.User;
 
 import java.io.FileNotFoundException;
 import java.sql.Connection;
@@ -19,6 +18,8 @@ import java.util.UUID;
 
 
 public class TreeGenerator {
+
+    Database db = new Database();
 
     Connection myConnection = null;
     String userName = null;
@@ -40,127 +41,37 @@ public class TreeGenerator {
 
          PersonDao personDataAccess = new PersonDao(myConnection);
         EventDao eventDataAccess = new EventDao(myConnection);
-
-        Person mother = null;
-
-        Person father = null;
-
-        if(generations+1>1){
-
-            mother = generatePersonTree("f", generations-1, year-25); // adjust reasonable year
-            father = generatePersonTree("m", generations-1, year-25);
-
-             mother.setGender("f");
-             father.setGender("m");
+        UserDao userDataAccess = new UserDao(myConnection);
+        User rootUser = userDataAccess.findUser(userName);
+        Person basePerson = null;
 
 
-            mother.setSpouseID(father.getPersonID());
+        Boolean duplicate = personDataAccess.findTrue(rootUser.getPersonID());
 
-            father.setSpouseID(mother.getPersonID());
+        if(!duplicate){
+            basePerson = makePerson(rootUser);
+            System.out.println("new user");
+        }else{
+            basePerson=personDataAccess.find(rootUser.getPersonID());
+            System.out.println("Duplicate");
+        }
 
 
 
 
 
-            setMaleRandomName(father);
 
-            setRandomFemaleFirstName(mother);
+        //call create parents
 
-            mother.setLastName(father.getLastName());//father and mother will have last name
+        createParents(basePerson, generations, personDataAccess);
 
-            //set the usernames
+        //open database connection
 
-            father.setAssociatedUsername(userName);
-            mother.setAssociatedUsername(userName);
+        personDataAccess.insert(basePerson);
 
-            //create the marriage event
-
-//            Event fatherMarriage = generateMarriageEvent(userName, father.getPersonID(), year -50);
-//
-//            Event motherMarriage = fatherMarriage; //we do this so that all the needed info matches up.
-//
-//            motherMarriage.setPersonID(mother.getPersonID()); //we can first set the mother's marriage event to the father and then change ID and eventID
-//
-//            motherMarriage.setEventID(UUID.randomUUID().toString()); // give the mother marriage event a unique ID
-//
-//
-//
-//
-//            //create the rest of the person information, names with the Json info before inserting them info the database
-//
-            personDataAccess.insert(mother); // put all of service in a try
-
-            personDataAccess.insert(father);
-//
-//            eventDataAccess.insert(motherMarriage); // insert the mother marriage event into the database
-//            eventDataAccess.insert(fatherMarriage); //insert the father marriage event into the database
-
-
-
-            numPeople+=2;
-
-            //add the marriage events here. This is where you will use the jSon data you were able to retrieve
-
-            //one UUID for the eventID. Might need to insert it twice want everything to match up
-            //last thing here is to make the marriage event. Get UUID for marrriage event for each of them
-            //get a random location, pull from the locations list
-            //create events for mother and father
-            //mother marriage event, UUID of event...Associated username, personID for mother, lat and lon...country, city and marriage, year as well
-            //Year is the person was born. Year +20
-            //Father is identical.. all info should be the same
-            //all done in if statement
-            //after you've made the events, call the event dao and add them to the databas
-
-            //add the marriage events that need to be in sync
-
-
-        } //this is the end of the if statement
-
-
-
-        //need to create person object for mother and then father
-
-       // Person person = new Person(UUID.randomUUID().toString(),"random", "motherFirst","motherLast", "f", "123","123","123");
-        //exit if stament and create the person
-
-        Person person = new Person(UUID.randomUUID().toString(), userName); //need to have a personID
-        //need to create person events for user before returning the personObject. Connect the events to this person
-//        person.setGender("f");
-//        person.setFirstName("Zeb");
-//        person.setLastName("Sorenson");
-
-
-        personDataAccess.find(userName);
-
-        //personDataAccess.insert(person);
-
-        //this will be the child of the people that were created.
-
-        //Make uuid for person ID...Get their names,
-
-        //events, check the gender of the person. this will determine what list you will pull from
-        //save the person in the person in the database
-
-        //if the father is null, not going further back set the parent ID's to null. We've reached the end of the recusrsion
-        //This will be the base case for as far back as we go
-
-        //create their birth events, eventID and the event itself, insert into the database and incriment the events added
-        //same thing with the death of the person. This will be an event in itself
-        //birth event, just pass in the year and then subtract a certain amount -20?
-
-        //create the person and return it.
-
-        //need to know how many total people and events are added
-
-
-
-       //how do I handle creating the attributes of the person? we could get all of the info from the Register request object
-        //but I don't know how we would handle this with the fill API
-        //Update, fill API comes with the username that is already in the database
-
-
-
-     return person;
+        //possible add a new database and connection. Open and close before doing anything
+        //don't try and open database multiple times
+     return basePerson;
     }
 
     private Event generateMarriageEvent(String associatedUsername, String personID, int yearParam) throws FileNotFoundException {
@@ -231,6 +142,60 @@ public class TreeGenerator {
 
 
 
+    }
+
+    private Person makePerson(User user){
+
+        Person newPerson = new Person(user.getPersonID(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getGender(),null, null, null);
+
+        return newPerson;
+    }
+
+    private Person[] createParents(Person currPerson, int currentGeneration, PersonDao personDataAccess) throws FileNotFoundException, DataAccessException {
+
+
+        Person mother = null;
+
+        Person father = null;
+
+
+
+        if(currentGeneration>0){
+
+            mother = new Person(UUID.randomUUID().toString(),currPerson.getAssociatedUsername(),null, null, "f", null, null, null);
+            father = new Person (UUID.randomUUID().toString(), currPerson.getAssociatedUsername(), null, null, "m", null, null, null);
+
+            setMaleRandomName(father);
+
+            setRandomFemaleFirstName(mother);
+
+            mother.setLastName(father.getLastName());
+
+            mother.setSpouseID(father.getPersonID());
+
+            father.setSpouseID(mother.getPersonID());
+
+
+            //not setting mother id's try printing
+            currPerson.setFatherID(father.getPersonID());
+            currPerson.setMotherID(mother.getPersonID());
+
+            //create the events for the people
+            createParents(mother, currentGeneration-1, personDataAccess); // adjust reasonable year
+
+            createParents(father, currentGeneration-1, personDataAccess);
+
+            personDataAccess.insert(mother); // put all of service in a try
+
+            personDataAccess.insert(father);
+
+
+            numPeople+=2;
+
+        }
+
+
+        return new Person[]{mother, father};
     }
 
 
