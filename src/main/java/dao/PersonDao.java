@@ -44,6 +44,9 @@ public class PersonDao {
       stmt.setString(7, person.getMotherID());
       stmt.setString(8, person.getSpouseID());
 
+      System.out.println(person.toString());
+
+
 
       stmt.executeUpdate();
      } catch (SQLException e) {

@@ -77,6 +77,25 @@ public class Person {
         this.spouseID = spouseID;
     }
 
+    public Person(String personID, String associatedUsername){
+
+        this.personID = personID;
+        this.associatedUsername = associatedUsername;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "personID='" + personID + '\'' +
+                ", associatedUsername='" + associatedUsername + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", gender='" + gender + '\'' +
+                ", fatherID='" + fatherID + '\'' +
+                ", motherID='" + motherID + '\'' +
+                ", spouseID='" + spouseID + '\'' +
+                '}';
+    }
 
     public String getPersonID() {
         return personID;

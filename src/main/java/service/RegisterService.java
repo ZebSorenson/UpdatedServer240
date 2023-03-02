@@ -4,8 +4,10 @@ import RequestResult.RegisterRequest;
 import RequestResult.RegisterResult;
 import dao.DataAccessException;
 import dao.Database;
+import dao.PersonDao;
 import dao.UserDao;
 import model.Authtoken;
+import model.Person;
 import model.User;
 
 import java.sql.Connection;
@@ -48,14 +50,15 @@ public class RegisterService {
         User registerUser = createUser(regReq);
 
 
+
         Connection conn = db.getConnection();
 
         try{
 
             UserDao userDataAccess = new UserDao(conn);
-
-            userDataAccess.clear(); //DELETE ME LATER
-
+            PersonDao dataAccessPerson = new PersonDao(db.getConnection());
+            userDataAccess.clear(); //DELETE ME LATER DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE
+            dataAccessPerson.clear(); //DELETE LATER
             userDataAccess.insert(registerUser);
 
             String newAuthToken = UUID. randomUUID().toString();
@@ -72,9 +75,11 @@ public class RegisterService {
 
             returnResult.setSuccess(true);
 
-//            TreeGenerator registerTree = new TreeGenerator(conn, returnResult.getUsername()); // creating our tree generator
-//            //giving our tree generator our connection to the database and the username for which we're creating the tree
-//            registerTree.generatePerson(regReq.getGender(), 4, Year.now().getValue());
+            TreeGenerator registerTree = new TreeGenerator(conn, returnResult.getUsername()); // creating our tree generator
+            //giving our tree generator our connection to the database and the username for which we're creating the tree
+            Person userPerson = registerTree.generatePersonTree(regReq.getGender(), 1, Year.now().getValue());
+            //set the rest of the atributes of the person right here before inserting!!!!! Need a complete person!!!
+            dataAccessPerson.insert(userPerson);
 
             db.closeConnection(true);
 

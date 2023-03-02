@@ -27,6 +27,8 @@ public class TreeGenerator {
 
     int numEvents = 0;
 
+
+
     public TreeGenerator(Connection conn, String userName) {
 
         this.myConnection = conn;
@@ -34,19 +36,19 @@ public class TreeGenerator {
 
     }
 
-    Person generatePersonTree(String gender, int generations, int year ) throws DataAccessException, FileNotFoundException {
+    Person generatePersonTree(String gender, int generations, int year) throws DataAccessException, FileNotFoundException {
 
-       PersonDao personDataAccess = new PersonDao(myConnection);
+         PersonDao personDataAccess = new PersonDao(myConnection);
         EventDao eventDataAccess = new EventDao(myConnection);
 
         Person mother = null;
 
         Person father = null;
 
-        if(generations>1){
+        if(generations+1>1){
 
-            mother = generatePersonTree("f", generations-1, year+25); // adjust reasonable year
-            father = generatePersonTree("m", generations-1, year+25);
+            mother = generatePersonTree("f", generations-1, year-25); // adjust reasonable year
+            father = generatePersonTree("m", generations-1, year-25);
 
              mother.setGender("f");
              father.setGender("m");
@@ -56,9 +58,14 @@ public class TreeGenerator {
 
             father.setSpouseID(mother.getPersonID());
 
+
+
+
+
             setMaleRandomName(father);
 
             setRandomFemaleFirstName(mother);
+
             mother.setLastName(father.getLastName());//father and mother will have last name
 
             //set the usernames
@@ -68,28 +75,29 @@ public class TreeGenerator {
 
             //create the marriage event
 
-            Event fatherMarriage = generateMarriageEvent(userName, father.getPersonID(), year -50);
-            Event motherMarriage = fatherMarriage; //we do this so that all the needed info matches up.
-            motherMarriage.setPersonID(mother.getPersonID()); //we can first set the mother's marriage event to the father and then change ID and eventID
-            motherMarriage.setEventID(UUID.randomUUID().toString()); // give the mother marriage event a unique ID
-
-
-
-
-            //create the rest of the person information, names with the Json info before inserting them info the database
-
+//            Event fatherMarriage = generateMarriageEvent(userName, father.getPersonID(), year -50);
+//
+//            Event motherMarriage = fatherMarriage; //we do this so that all the needed info matches up.
+//
+//            motherMarriage.setPersonID(mother.getPersonID()); //we can first set the mother's marriage event to the father and then change ID and eventID
+//
+//            motherMarriage.setEventID(UUID.randomUUID().toString()); // give the mother marriage event a unique ID
+//
+//
+//
+//
+//            //create the rest of the person information, names with the Json info before inserting them info the database
+//
             personDataAccess.insert(mother); // put all of service in a try
 
             personDataAccess.insert(father);
-
-            eventDataAccess.insert(motherMarriage); // insert the mother marriage event into the database
-            eventDataAccess.insert(fatherMarriage); //insert the father marriage event into the database
+//
+//            eventDataAccess.insert(motherMarriage); // insert the mother marriage event into the database
+//            eventDataAccess.insert(fatherMarriage); //insert the father marriage event into the database
 
 
 
             numPeople+=2;
-
-
 
             //add the marriage events here. This is where you will use the jSon data you were able to retrieve
 
@@ -108,7 +116,23 @@ public class TreeGenerator {
 
         } //this is the end of the if statement
 
+
+
+        //need to create person object for mother and then father
+
+       // Person person = new Person(UUID.randomUUID().toString(),"random", "motherFirst","motherLast", "f", "123","123","123");
         //exit if stament and create the person
+
+        Person person = new Person(UUID.randomUUID().toString(), userName); //need to have a personID
+        //need to create person events for user before returning the personObject. Connect the events to this person
+//        person.setGender("f");
+//        person.setFirstName("Zeb");
+//        person.setLastName("Sorenson");
+
+
+        personDataAccess.find(userName);
+
+        //personDataAccess.insert(person);
 
         //this will be the child of the people that were created.
 
@@ -136,7 +160,7 @@ public class TreeGenerator {
 
 
 
-     return null;
+     return person;
     }
 
     private Event generateMarriageEvent(String associatedUsername, String personID, int yearParam) throws FileNotFoundException {
