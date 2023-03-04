@@ -19,6 +19,9 @@ public class RegisterHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
+       // exchange.getRequestURI().toString(); this will give the info from the URL
+        //Split method on a String object and it will split the String into an array. Can give it / and seperate as needed
+
 
 
         boolean success = false;

@@ -51,6 +51,8 @@ public class RegisterService {
 
 
 
+
+
         Connection conn = db.getConnection();
 
         try{
@@ -68,6 +70,7 @@ public class RegisterService {
             //create the return object
 
             returnResult.setAuthtoken(newAuthToken);
+            System.out.println("The authToken to test with is...DELETE THIS CODE..."+newAuthToken); //DELETE ME!!!
 
             returnResult.setUsername(registerUser.getUsername());
 
@@ -84,6 +87,8 @@ public class RegisterService {
             // dataAccessPerson.insert(userPerson);
 
           //  db.closeConnection(true); when do you close the connection??
+
+
 
             return returnResult;
 

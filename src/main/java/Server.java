@@ -3,9 +3,7 @@ import java.net.*;
 import java.util.Random;
 
 import JSonMagic.json.*;
-import handler.LoginHandler;
-import handler.RegisterHandler;
-import handler.FileHandler;
+import handler.*;
 
 import com.sun.net.httpserver.*;
 
@@ -84,6 +82,10 @@ public class Server {
         server.createContext("/user/register", new RegisterHandler());
 
         server.createContext("/user/login", new LoginHandler());
+
+        server.createContext("/clear", new ClearHandler());
+
+        server.createContext("/fill/", new FillHandler());
 
 
 

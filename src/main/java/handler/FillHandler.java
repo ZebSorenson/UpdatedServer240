@@ -1,6 +1,6 @@
 package handler;
 
-import RequestResult.ClearResult;
+import RequestResult.FillResult;
 import RequestResult.LoginRequest;
 import RequestResult.LoginResult;
 import com.google.gson.Gson;
@@ -8,7 +8,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dao.DataAccessException;
-import service.ClearService;
+import service.FillService;
 import service.LoginService;
 
 import java.io.*;
@@ -16,11 +16,30 @@ import java.net.HttpURLConnection;
 import java.sql.SQLException;
 
 
-public class ClearHandler implements HttpHandler {
+public class FillHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-        System.out.println("You have arrived at the ClearHandler");
+        // exchange.getRequestURI().toString(); this will give the info from the URL
+        //Split method on a String object and it will split the String into an array. Can give it / and seperate as needed
+
+        String userName = null;
+        Integer numGeneration = null;
+
+        String requestUri = exchange.getRequestURI().toString();
+        String[] parts = requestUri.split("/");
+        if (parts.length == 3 && parts[1].equals("fill")) {
+             userName = parts[2];
+             System.out.println(userName);
+            // set name in exchange object
+        } else if (parts.length == 4 && parts[1].equals("fill")) {
+             userName = parts[2];
+              numGeneration = Integer.parseInt(parts[3]);
+             System.out.println(numGeneration + " Generations:"+ " Username, "+userName);
+            // set name and username in exchange object
+        } else {
+            // invalid URL pattern
+        }
 
 
 
@@ -28,24 +47,17 @@ public class ClearHandler implements HttpHandler {
 
         try {
 
-
             if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
 
-                // Get the HTTP request headers
-                Headers reqHeaders = exchange.getRequestHeaders();
-                // Check to see if an "Authorization" header is present
-                if (reqHeaders.containsKey("Authorization")) {
 
-                    // Extract the auth token from the "Authorization" header
-                    String authToken = reqHeaders.getFirst("Authorization"); //what does this mean?
+                 Gson gson = new Gson();
 
 
-                    Gson gson = new Gson();
 
-                    ClearService service = new ClearService();
+                    FillService service = new FillService();
 
-
-                    ClearResult result = service.clear();
+                    FillResult result = service.fill(userName); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
+                    //if yes, then it will send back a result object with an Auth token
 
                     // service.login(request);
 
@@ -59,13 +71,8 @@ public class ClearHandler implements HttpHandler {
 
                     resBody.close();
 
-
                     success = true;
 
-
-
-                    // } //put me back!!
-                }
             }
 
             if (!success) {

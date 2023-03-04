@@ -1,5 +1,7 @@
 package service;
 
+import RequestResult.FillResult;
+
 /**
  * service object that will populate the server's database with data for the given username.
  * Default will be 4 generations but can call fill with int param to specify how many generations the user would like
@@ -13,8 +15,9 @@ public class FillService {
      * @return fillResult objectt containing info on whether or not service was successful
      */
 
-    public void fill(String username){
-
+    public FillResult fill(String username){
+        System.out.println("you have arrived at just the single username service");
+    return null;
     }
 
     /**
@@ -24,8 +27,9 @@ public class FillService {
      * @return fillResult object containing info on whether or not service was succesful
      */
 
-    public void fill(String username, Integer generations){
-
+    public FillResult fill(String username, Integer generations){
+        System.out.println("You have arrived at the fill service that takes a username and numbers of generations");
+return null;
     }
 
     //just pass in a fill request objects

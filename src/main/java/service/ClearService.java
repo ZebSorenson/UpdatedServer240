@@ -15,7 +15,7 @@ public class ClearService {
 
     Database db = new Database();
 
-    Connection conn = null;
+
 
     /**
      * clears ALL data from database
@@ -23,16 +23,23 @@ public class ClearService {
      * @return clearResult object containing info depending on whether or not the service was successful
      */
 
-    public ClearResult clear(){
+    public ClearResult clear() {
+
+        System.out.println("you have arrived at the clear SERVICE");
 
         ClearResult resultToreturn = new ClearResult();
+    try{
+
+        Connection conn = db.getConnection();
+
+
+
         //is this bad to have so many connections getting passed around?
         AuthtokenDao dataAccessAUTHDao = new AuthtokenDao(conn);
         EventDao dataAccessEventDao = new EventDao(conn);
         PersonDao personDataAccessDao = new PersonDao(conn);
         UserDao userDataAccessDao = new UserDao(conn);
 
-    try{
         dataAccessAUTHDao.clear();
         dataAccessEventDao.clear();
         personDataAccessDao.clear();
@@ -41,9 +48,14 @@ public class ClearService {
         conn.commit();
         conn.close();
         resultToreturn.setMessage("Clear succeeded");
+        resultToreturn.setSuccess(true);
+        System.out.println("you have arrived at the end of the try block");
 
     } catch (DataAccessException e) {
         System.out.println("Error encountered in the clear service when attempting to clear");
+        resultToreturn.setSuccess(false);
+        resultToreturn.setMessage("DataAccessException when attempting to clear the database");
+
         throw new RuntimeException(e);
     } catch (SQLException e) {
         throw new RuntimeException(e);
