@@ -76,6 +76,7 @@ public class LoginService {
                 returnResult.setPersonID(loginDataAccess.findPersonID(userName));
                 returnResult.setSuccess(true);
                 conn.commit();
+                conn.close(); //added
                 return returnResult;
             }
             //check to see if the password is incorrect

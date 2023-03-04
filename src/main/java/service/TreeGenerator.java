@@ -8,6 +8,7 @@ import model.User;
 
 import java.io.FileNotFoundException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Random;
 import java.util.UUID;
 
@@ -37,41 +38,46 @@ public class TreeGenerator {
 
     }
 
-    Person generatePersonTree(String gender, int generations, int year) throws DataAccessException, FileNotFoundException {
+    Person generatePersonTree(String gender, int generations, int year) throws DataAccessException, FileNotFoundException, SQLException {
 
-         PersonDao personDataAccess = new PersonDao(myConnection);
+        //should this be in a try catch block because it deals with the database?
+
+        PersonDao personDataAccess = new PersonDao(myConnection);
+
         EventDao eventDataAccess = new EventDao(myConnection);
+
         UserDao userDataAccess = new UserDao(myConnection);
-        User rootUser = userDataAccess.findUser(userName);
-        Person basePerson = null;
+
+        User rootUser = userDataAccess.findUser(userName); //used to check if we already have this user in the database
+
+        Person basePerson = null; //the root child of the tree
 
 
         Boolean duplicate = personDataAccess.findTrue(rootUser.getPersonID());
 
         if(!duplicate){
-            basePerson = makePerson(rootUser);
+            basePerson = makePerson(rootUser); //if the user is not already in the database, we create the base person with the username
             System.out.println("new user");
         }else{
             basePerson=personDataAccess.find(rootUser.getPersonID());
             System.out.println("Duplicate");
         }
 
+        //call create parents, will generate random data for the parents
 
-
-
-
-
-        //call create parents
-
-        createParents(basePerson, generations, personDataAccess);
+        createParents(basePerson, generations, personDataAccess); //we base our base person in to make sure we can keep
+        //the parents connected to them
 
         //open database connection
 
-        personDataAccess.insert(basePerson);
+        personDataAccess.insert(basePerson); //insert the new base person into the database
+
+        myConnection.commit();
+        myConnection.close();
 
         //possible add a new database and connection. Open and close before doing anything
         //don't try and open database multiple times
-     return basePerson;
+        return basePerson;
     }
 
     private Event generateMarriageEvent(String associatedUsername, String personID, int yearParam) throws FileNotFoundException {
@@ -92,10 +98,6 @@ public class TreeGenerator {
         Event marriageEvent = new Event(UUID.randomUUID().toString(),associatedUsername,personID,latitude,longitude,country,city,eventType, year);
 
         return marriageEvent;
-
-
-
-
 
 
     }
@@ -181,7 +183,7 @@ public class TreeGenerator {
             currPerson.setMotherID(mother.getPersonID());
 
             //create the events for the people...This is where you will call your make event functions for mom and dad...
-            createParents(mother, currentGeneration-1, personDataAccess); // adjust reasonable year
+            createParents(mother, currentGeneration-1, personDataAccess);
 
             createParents(father, currentGeneration-1, personDataAccess);
 
@@ -213,4 +215,6 @@ public class TreeGenerator {
 
 //possible move this stuff into the fill service and the register in
 
+
+//should make everything 25 years apart to keep things easy. This will help to avoid weird event data
 
