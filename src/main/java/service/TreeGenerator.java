@@ -73,7 +73,7 @@ public class TreeGenerator {
 
         //call create parents, will generate random data for the parents
 
-        createParents(basePerson, generations, personDataAccess, eventDataAccess); //we base our base person in to make sure we can keep
+        createParents(basePerson, generations, personDataAccess, eventDataAccess, currYear); //we base our base person in to make sure we can keep
         //the parents connected to them
 
         //open database connection
@@ -162,7 +162,7 @@ public class TreeGenerator {
         return newPerson;
     }
 
-    private Person[] createParents(Person currPerson, int currentGeneration, PersonDao personDataAccess, EventDao eventDataAccess) throws FileNotFoundException, DataAccessException {
+    private Person[] createParents(Person currPerson, int currentGeneration, PersonDao personDataAccess, EventDao eventDataAccess, int year) throws FileNotFoundException, DataAccessException {
 
 
         Person mother = null;
@@ -192,12 +192,12 @@ public class TreeGenerator {
             currPerson.setMotherID(mother.getPersonID());
 
             //create the events for the people...This is where you will call your make event functions for mom and dad...
-            Event fatherMarriageEvent = generateMarriageEvent(father.getPersonID(),currYear-25);
-            Event motherMarriageEvent = new Event(UUID.randomUUID().toString(), userName, mother.getPersonID(), fatherMarriageEvent.getLatitude(),fatherMarriageEvent.getLongitude(), fatherMarriageEvent.getCountry(),fatherMarriageEvent.getCity(),"Marriage",currYear-25);
+            Event fatherMarriageEvent = generateMarriageEvent(father.getPersonID(),year-25);
+            Event motherMarriageEvent = new Event(UUID.randomUUID().toString(), userName, mother.getPersonID(), fatherMarriageEvent.getLatitude(),fatherMarriageEvent.getLongitude(), fatherMarriageEvent.getCountry(),fatherMarriageEvent.getCity(),"Marriage",year-25);
 
-            createParents(mother, currentGeneration-1, personDataAccess, eventDataAccess);
+            createParents(mother, currentGeneration-1, personDataAccess, eventDataAccess, year -25);
 
-            createParents(father, currentGeneration-1, personDataAccess, eventDataAccess);
+            createParents(father, currentGeneration-1, personDataAccess, eventDataAccess, year-25);
 
             personDataAccess.insert(mother); // put all of service in a try
 
