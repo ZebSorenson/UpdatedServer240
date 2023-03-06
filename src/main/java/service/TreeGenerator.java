@@ -76,9 +76,15 @@ public class TreeGenerator {
         createParents(basePerson, generations, personDataAccess, eventDataAccess, currYear); //we base our base person in to make sure we can keep
         //the parents connected to them
 
+        //
+
         //open database connection
 
         personDataAccess.insert(basePerson); //insert the new base person into the database
+
+        //insert birth and death for parents
+
+
 
         myConnection.commit();
         myConnection.close();
@@ -206,10 +212,30 @@ public class TreeGenerator {
             eventDataAccess.insert(fatherMarriageEvent);
             eventDataAccess.insert(motherMarriageEvent);
 
+            Event fatherBirth =generateParentBirthEvent(father.getPersonID(), year-50);
+            Event motherEvent =generateParentBirthEvent(mother.getPersonID(), year-50);
+
+            Event fatherDeath = generateParentDeath(father.getPersonID(), year-5);
+
+            Event motherDeath = generateParentDeath(mother.getPersonID(), year-5);
+
+
+            eventDataAccess.insert(fatherBirth);
+            eventDataAccess.insert(motherEvent);
+
+            eventDataAccess.insert(fatherDeath);
+            eventDataAccess.insert(motherDeath);
 
             numPeople+=2;
 
         }
+
+        //create birth and death for parents
+
+
+
+
+
 
 
         return new Person[]{mother, father};
@@ -235,6 +261,48 @@ public class TreeGenerator {
         Event birthEvent = new Event(UUID.randomUUID().toString(),user.getUsername(),user.getPersonID(), latitude,longitude,country,city,"Birth",currYear-20);
 
         return birthEvent;
+    }
+
+    private Event generateParentBirthEvent(String personID, int year) throws FileNotFoundException {
+
+
+        LocationsGenerator locs = new LocationsGenerator();
+
+        int max = locs.getLocationList().size(); //this is how far we can go in our random generation
+
+        int randomLocationIndex = new Random().nextInt(max);
+
+        float latitude = locs.getLocationList().get(randomLocationIndex).getLatitude();
+        float longitude = locs.getLocationList().get(randomLocationIndex).getLongitude();
+        String country = locs.getLocationList().get(randomLocationIndex).getCountry();
+        String city = locs.getLocationList().get(randomLocationIndex).getCity();
+
+
+        Event parentBirthEvent = new Event(UUID.randomUUID().toString(), userName, personID, latitude,longitude,country,city,"birth", year);
+
+        return  parentBirthEvent;
+
+    }
+
+
+    private Event generateParentDeath(String personID, int year) throws FileNotFoundException {
+
+        LocationsGenerator locs = new LocationsGenerator();
+
+        int max = locs.getLocationList().size(); //this is how far we can go in our random generation
+
+        int randomLocationIndex = new Random().nextInt(max);
+
+        float latitude = locs.getLocationList().get(randomLocationIndex).getLatitude();
+        float longitude = locs.getLocationList().get(randomLocationIndex).getLongitude();
+        String country = locs.getLocationList().get(randomLocationIndex).getCountry();
+        String city = locs.getLocationList().get(randomLocationIndex).getCity();
+
+
+        Event parentDeathEvent = new Event(UUID.randomUUID().toString(), userName, personID, latitude,longitude,country,city,"death", year);
+
+        return  parentDeathEvent;
+
     }
 
 

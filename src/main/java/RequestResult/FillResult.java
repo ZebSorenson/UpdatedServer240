@@ -19,5 +19,21 @@ public class FillResult {
 
     Boolean success;
 
+    public String getMesssage() {
+        return messsage;
+    }
+
+    public void setMesssage(String messsage) {
+        this.messsage = messsage;
+    }
+
+    public Boolean getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }
+
     //same will be the same with error
 }

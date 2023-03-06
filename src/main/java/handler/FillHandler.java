@@ -110,6 +110,10 @@ public class FillHandler implements HttpHandler {
 
             // Display/log the stack trace
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
         }
 
 

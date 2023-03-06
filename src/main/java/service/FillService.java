@@ -1,9 +1,14 @@
 package service;
 
 import RequestResult.FillResult;
+import dao.DataAccessException;
 import dao.Database;
+import dao.UserDao;
+import model.User;
 
+import java.io.FileNotFoundException;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * service object that will populate the server's database with data for the given username.
@@ -11,9 +16,11 @@ import java.sql.Connection;
  */
 public class FillService {
 
-    Database db = new Database();
+
     Connection conn = null;
     String userName = null;
+
+    final int currYear = 2023;
 
     public FillService(String userName){
         this.userName = userName;
@@ -39,9 +46,36 @@ public class FillService {
      * @return fillResult object containing info on whether or not service was succesful
      */
 
-    public FillResult fill(String username, Integer generations){
-        System.out.println("You have arrived at the fill service that takes a username and numbers of generations");
-return null;
+    public FillResult fill(String username, Integer generations) throws DataAccessException, SQLException, FileNotFoundException {
+
+
+
+
+        //put this into a Try block
+        Database db = new Database();
+
+        conn= db.getConnection();
+
+        UserDao dataAccessUser = new UserDao(conn);
+
+        User basePerson = dataAccessUser.findUser(userName);
+
+       if(dataAccessUser.findUsername(userName)==null){
+           //return a null user
+       }
+       //if not null, you can just call the info and clear everything.
+
+        TreeGenerator newPersonTree = new TreeGenerator(conn, userName);
+
+        newPersonTree.generatePersonTree(basePerson.getGender(),generations,currYear);
+
+        FillResult result = new FillResult();
+
+        result.setMesssage("Successfully");
+        result.setSuccess(true);
+
+        return result;
+
     }
 
     //just pass in a fill request objects

@@ -109,6 +109,17 @@ public class EventDao {
         //makes updates to even that is passed in
     }
 
+    public void deleteUserData(String userName) throws DataAccessException {
+        String sql = "DELETE FROM Event WHERE associatedUsername = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, userName);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while clearing the person table");
+        }
+    }
+
 
 
 
