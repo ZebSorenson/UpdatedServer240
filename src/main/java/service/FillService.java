@@ -1,12 +1,23 @@
 package service;
 
 import RequestResult.FillResult;
+import dao.Database;
+
+import java.sql.Connection;
 
 /**
  * service object that will populate the server's database with data for the given username.
  * Default will be 4 generations but can call fill with int param to specify how many generations the user would like
  */
 public class FillService {
+
+    Database db = new Database();
+    Connection conn = null;
+    String userName = null;
+
+    public FillService(String userName){
+        this.userName = userName;
+    }
 
     /**
      * will add data for the username passed in
@@ -16,7 +27,8 @@ public class FillService {
      */
 
     public FillResult fill(String username){
-        System.out.println("you have arrived at just the single username service");
+        System.out.println("you have arrived at just the single username service"); //WILL ACTUALLY NOT NEED THIS FUNCTION.
+        //EVERY CALL TO THE SERVICE WILL PROVIDE A NUMBER OF GENERATIONS. CAN PROBABLY DELETE THIS LATER
     return null;
     }
 

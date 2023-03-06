@@ -20,6 +20,8 @@ import java.util.UUID;
 
 public class TreeGenerator {
 
+    private final int currYear = 2023;
+
     Database db = new Database();
 
     Connection myConnection = null;
@@ -28,6 +30,8 @@ public class TreeGenerator {
     int numPeople = 0;
 
     int numEvents = 0;
+
+    private User rootUser = null;
 
 
 
@@ -48,7 +52,11 @@ public class TreeGenerator {
 
         UserDao userDataAccess = new UserDao(myConnection);
 
-        User rootUser = userDataAccess.findUser(userName); //used to check if we already have this user in the database
+        //User rootUser = userDataAccess.findUser(userName); //used to check if we already have this user in the database, possibly put this back!!
+
+         rootUser = userDataAccess.findUser(userName); //this is a class variable now
+
+        eventDataAccess.insert(generateUserBirthEvent(rootUser)); //create the root user's birth event and insert it into the database
 
         Person basePerson = null; //the root child of the tree
 
@@ -80,7 +88,7 @@ public class TreeGenerator {
         return basePerson;
     }
 
-    private Event generateMarriageEvent(String associatedUsername, String personID, int yearParam) throws FileNotFoundException {
+    private Event generateMarriageEvent( String personID, int yearParam) throws FileNotFoundException {
 
         LocationsGenerator locs = new LocationsGenerator();
 
@@ -92,11 +100,11 @@ public class TreeGenerator {
         float longitude = locs.getLocationList().get(randomLocationIndex).getLongitude();
         String country = locs.getLocationList().get(randomLocationIndex).getCountry();
         String city = locs.getLocationList().get(randomLocationIndex).getCity();
-        String eventType = "marriage";
+        String eventType = "Marriage";
 
         int year = yearParam;
 
-        Event marriageEvent = new Event(UUID.randomUUID().toString(),associatedUsername,personID,latitude,longitude,country,city,eventType, year);
+        Event marriageEvent = new Event(UUID.randomUUID().toString(),userName,personID,latitude,longitude,country,city,eventType, year);
 
         return marriageEvent;
 
@@ -184,8 +192,8 @@ public class TreeGenerator {
             currPerson.setMotherID(mother.getPersonID());
 
             //create the events for the people...This is where you will call your make event functions for mom and dad...
-            Event fatherMarriageEvent = generateMarriageEvent(userName,father.getPersonID(),1950);
-            Event motherMarriageEvent = new Event(UUID.randomUUID().toString(), userName, mother.getPersonID(), fatherMarriageEvent.getLatitude(),fatherMarriageEvent.getLongitude(), fatherMarriageEvent.getCountry(),fatherMarriageEvent.getCity(),"marriage",1950);
+            Event fatherMarriageEvent = generateMarriageEvent(father.getPersonID(),currYear-25);
+            Event motherMarriageEvent = new Event(UUID.randomUUID().toString(), userName, mother.getPersonID(), fatherMarriageEvent.getLatitude(),fatherMarriageEvent.getLongitude(), fatherMarriageEvent.getCountry(),fatherMarriageEvent.getCity(),"Marriage",currYear-25);
 
             createParents(mother, currentGeneration-1, personDataAccess, eventDataAccess);
 
@@ -205,6 +213,28 @@ public class TreeGenerator {
 
 
         return new Person[]{mother, father};
+    }
+
+    private Event generateUserBirthEvent(User user) throws FileNotFoundException { // we pass in the root user,
+        //create random location data, and set the birth to the current year -20. Giving our root user an age of 20.
+        user = rootUser;
+
+        LocationsGenerator locs = new LocationsGenerator();
+
+        int max = locs.getLocationList().size(); //this is how far we can go in our random generation
+
+        int randomLocationIndex = new Random().nextInt(max);
+
+        float latitude = locs.getLocationList().get(randomLocationIndex).getLatitude();
+        float longitude = locs.getLocationList().get(randomLocationIndex).getLongitude();
+        String country = locs.getLocationList().get(randomLocationIndex).getCountry();
+        String city = locs.getLocationList().get(randomLocationIndex).getCity();
+
+
+
+        Event birthEvent = new Event(UUID.randomUUID().toString(),user.getUsername(),user.getPersonID(), latitude,longitude,country,city,"Birth",currYear-20);
+
+        return birthEvent;
     }
 
 

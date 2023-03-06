@@ -17,11 +17,15 @@ import java.sql.SQLException;
 
 
 public class FillHandler implements HttpHandler {
+
+    final int defaultGeneration = 4; //default number of generations if not specified by the user.
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
         // exchange.getRequestURI().toString(); this will give the info from the URL
         //Split method on a String object and it will split the String into an array. Can give it / and seperate as needed
+
+        //STILL NEED DAO TO HANDLE CHECKING IF THERE IS DATA CONNECTED TO THE USER. PROBABLY DO THIS IN THE SERVICE CLASS.
 
         String userName = null;
         Integer numGeneration = null;
@@ -51,13 +55,22 @@ public class FillHandler implements HttpHandler {
 
 
                  Gson gson = new Gson();
+                 FillResult result = new FillResult();
 
 
 
-                    FillService service = new FillService();
+                    FillService service = new FillService(userName); //create the new Fill service object and give it the username for the person we are filling.
+                    //note, this is just a string, not an actual user. We'll need to use the Dao classes to actually get the user
 
-                    FillResult result = service.fill(userName); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
-                    //if yes, then it will send back a result object with an Auth token
+                    if(parts.length==4){
+                         result = service.fill(userName, numGeneration); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
+                        //if yes, then it will send back a result object with an Auth token
+
+
+                    }else if(parts.length==3){
+                        result = service.fill(userName, defaultGeneration); // this is the default number of generations
+                    }
+
 
                     // service.login(request);
 
