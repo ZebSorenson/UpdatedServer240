@@ -82,7 +82,7 @@ public class RegisterService {
             //giving our tree generator our connection to the database and the username for which we're creating the tree\
 
 
-            Person userPerson = registerTree.generatePersonTree(regReq.getGender(), 2, Year.now().getValue());
+            Person userPerson = registerTree.generatePersonTree(regReq.getGender(), 4, Year.now().getValue());
             //TREE CODE ABOVE
 
 

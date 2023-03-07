@@ -87,6 +87,8 @@ public class Server {
 
         server.createContext("/fill/", new FillHandler());
 
+        server.createContext("/load", new LoadHandler());
+
 
 
 
