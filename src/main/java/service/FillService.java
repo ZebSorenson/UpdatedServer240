@@ -1,9 +1,7 @@
 package service;
 
 import RequestResult.FillResult;
-import dao.DataAccessException;
-import dao.Database;
-import dao.UserDao;
+import dao.*;
 import model.User;
 
 import java.io.FileNotFoundException;
@@ -49,30 +47,47 @@ public class FillService {
     public FillResult fill(String username, Integer generations) throws DataAccessException, SQLException, FileNotFoundException {
 
 
-
+        FillResult result = new FillResult();
 
         //put this into a Try block
         Database db = new Database();
 
         conn= db.getConnection();
 
-        UserDao dataAccessUser = new UserDao(conn);
+        UserDao userDataAccess = new UserDao(conn);
+        EventDao eventDataAccess = new EventDao(conn);
+        PersonDao personDataAccess = new PersonDao(conn);
 
-        User basePerson = dataAccessUser.findUser(userName);
+        User basePerson = userDataAccess.findUser(userName);
 
-       if(dataAccessUser.findUsername(userName)==null){
+       if(userDataAccess.findUsername(userName)==null){
            //return a null user
+           result.setSuccess(false);
+           result.setMesssage("User does not exist in the database");
+           conn.rollback();
+           conn.close();
+           return result;
+       }else if(userDataAccess.findUsername(userName)!=null){
+
+           personDataAccess.deleteUserData(userName);
+
+           eventDataAccess.deleteUserData(userName);
+
+           TreeGenerator newPersonTree = new TreeGenerator(conn, userName);
+
+           newPersonTree.generatePersonTree(basePerson.getGender(),generations,currYear);
+
+           result.setMesssage("Successfully");
+
+           result.setSuccess(true);
+
+           conn.commit();
+           conn.close();
+
        }
        //if not null, you can just call the info and clear everything.
 
-        TreeGenerator newPersonTree = new TreeGenerator(conn, userName);
 
-        newPersonTree.generatePersonTree(basePerson.getGender(),generations,currYear);
-
-        FillResult result = new FillResult();
-
-        result.setMesssage("Successfully");
-        result.setSuccess(true);
 
         return result;
 

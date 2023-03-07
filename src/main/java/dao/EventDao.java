@@ -110,7 +110,7 @@ public class EventDao {
     }
 
     public void deleteUserData(String userName) throws DataAccessException {
-        String sql = "DELETE FROM Event WHERE associatedUsername = ?;";
+        String sql = "DELETE FROM Events WHERE associatedUsername = ?;";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, userName);
             stmt.executeUpdate();
