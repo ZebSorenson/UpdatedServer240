@@ -52,40 +52,57 @@ public class FillService {
         //put this into a Try block
         Database db = new Database();
 
-        conn= db.getConnection();
+        try {
 
-        UserDao userDataAccess = new UserDao(conn);
-        EventDao eventDataAccess = new EventDao(conn);
-        PersonDao personDataAccess = new PersonDao(conn);
 
-        User basePerson = userDataAccess.findUser(userName);
+            conn = db.getConnection();
 
-       if(userDataAccess.findUsername(userName)==null){
-           //return a null user
-           result.setSuccess(false);
-           result.setMesssage("User does not exist in the database");
-           conn.rollback();
-           conn.close();
-           return result;
-       }else if(userDataAccess.findUsername(userName)!=null){
+            UserDao userDataAccess = new UserDao(conn);
+            EventDao eventDataAccess = new EventDao(conn);
+            PersonDao personDataAccess = new PersonDao(conn);
 
-           personDataAccess.deleteUserData(userName);
+            User basePerson = userDataAccess.findUser(userName);
 
-           eventDataAccess.deleteUserData(userName);
+            if (userDataAccess.findUsername(userName) == null) {
+                //return a null user
+                result.setSuccess(false);
+                result.setMesssage("User does not exist in the database");
+                db.closeConnection(false);
+                return result;
+            } else if (userDataAccess.findUsername(userName) != null) {
 
-           TreeGenerator newPersonTree = new TreeGenerator(conn, userName);
+                personDataAccess.deleteUserData(userName);
 
-           newPersonTree.generatePersonTree(basePerson.getGender(),generations,currYear);
+                eventDataAccess.deleteUserData(userName);
 
-           result.setMesssage("Successfully");
+                TreeGenerator newPersonTree = new TreeGenerator(conn, userName);
 
-           result.setSuccess(true);
+                newPersonTree.generatePersonTree(basePerson.getGender(), generations, currYear);
 
-           conn.commit();
-           conn.close();
+                result.setMesssage("Successfully");
 
-       }
-       //if not null, you can just call the info and clear everything.
+                result.setSuccess(true);
+
+                db.closeConnection(true);
+            }
+
+        } catch (DataAccessException e) {
+            result.setMesssage("DataAccess Exception caught");
+            result.setSuccess(false);
+            db.closeConnection(false);
+            throw new RuntimeException(e);
+        } catch (FileNotFoundException e) {
+            result.setMesssage("FileNotFoundException Exception caught");
+            result.setSuccess(false);
+            db.closeConnection(false);
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            result.setMesssage("SQLException Exception caught");
+            result.setSuccess(false);
+            db.closeConnection(false);
+            throw new RuntimeException(e);
+        }
+        //if not null, you can just call the info and clear everything.
 
 
 

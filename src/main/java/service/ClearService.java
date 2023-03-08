@@ -45,8 +45,7 @@ public class ClearService {
         personDataAccessDao.clear();
         userDataAccessDao.clear();
         resultToreturn.setSuccess(true);
-        conn.commit();
-        conn.close();
+        db.closeConnection(true);
         resultToreturn.setMessage("Clear succeeded");
         resultToreturn.setSuccess(true);
         System.out.println("you have arrived at the end of the try block");
@@ -55,9 +54,8 @@ public class ClearService {
         System.out.println("Error encountered in the clear service when attempting to clear");
         resultToreturn.setSuccess(false);
         resultToreturn.setMessage("DataAccessException when attempting to clear the database");
+        db.closeConnection(false);
 
-        throw new RuntimeException(e);
-    } catch (SQLException e) {
         throw new RuntimeException(e);
     }
 

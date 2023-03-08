@@ -2,6 +2,7 @@ package service;
 
 import RequestResult.LoginRequest;
 import RequestResult.LoginResult;
+import dao.AuthtokenDao;
 import dao.DataAccessException;
 import dao.Database;
 import dao.UserDao;
@@ -51,11 +52,11 @@ public class LoginService {
         //may need to handle something that is not formated correctly
         //am I handling the connection correctly??? With commits and rollbacks?
 
-        Connection conn = db.getConnection();
+
 
         LoginResult returnResult = new LoginResult();
 
-        UserDao loginDataAccess = new UserDao(conn);
+
 
 
         String userName = loginReq.getUsername();
@@ -63,65 +64,69 @@ public class LoginService {
 
         boolean successLogin = false;
 
-        if(loginDataAccess.findUsername(userName)!=null){
-            if(loginDataAccess.verifyCredentials(userName, passWord)){
-                UUID myUUID = UUID.randomUUID();
-                String newAuthToken = myUUID.toString();
-                //the username and password match!
-                System.out.println("They should match! If you've made it this far, things are going well");
-                System.out.println(userName+" "+passWord);
-//                LoginResult returnResult = new LoginResult();
-                returnResult.setAuthtoken(newAuthToken);
-                returnResult.setUsername(userName);
-                returnResult.setPersonID(loginDataAccess.findPersonID(userName));
-                returnResult.setSuccess(true);
-                conn.commit();
-                conn.close(); //added
-                return returnResult;
-            }
-            //check to see if the password is incorrect
+        try {
+            Connection conn = db.getConnection();
+            UserDao userDataAccess = new UserDao(conn);
+            AuthtokenDao authTokenDataAccess = new AuthtokenDao(conn);
 
-            else if(!loginDataAccess.verifyCredentials(userName, passWord)){
 
+            if (userDataAccess.findUsername(userName) != null) {
+                if (userDataAccess.verifyCredentials(userName, passWord)) {
+
+                    UUID myUUID = UUID.randomUUID();
+
+                    String uniqueString = myUUID.toString();
+                    //the username and password match!
+                    System.out.println("They should match! If you've made it this far, things are going well");
+
+                    System.out.println(userName + " " + passWord);
+
+                    returnResult.setAuthtoken(uniqueString);
+
+                    returnResult.setUsername(userName);
+
+                    returnResult.setPersonID(userDataAccess.findPersonID(userName));
+
+                    returnResult.setSuccess(true);
+
+                    Authtoken loginAuth = new Authtoken(uniqueString, userName);
+
+                    authTokenDataAccess.insert(loginAuth);
+
+                    db.closeConnection(true);
+
+                    return returnResult;
+                }
+                //check to see if the password is incorrect
+
+                else if (!userDataAccess.verifyCredentials(userName, passWord)) {
+
+                    returnResult.setSuccess(false);
+                    returnResult.setMessage("Error: incorrect password");
+                    db.closeConnection(false);
+                    return returnResult;
+
+
+                }
+            } else if (userDataAccess.find(userName) == null) {
                 returnResult.setSuccess(false);
-                returnResult.setMessage("Error: incorrect password");
-                conn.rollback();
+                returnResult.setMessage("Error: invalid username or password");
+                db.closeConnection(false);
                 return returnResult;
-
-
             }
-        }else if(loginDataAccess.find(userName)==null){
+
+        } catch (DataAccessException e) {
+            returnResult.setMessage("Error caught");
             returnResult.setSuccess(false);
-            returnResult.setMessage("Error: invalid username or password");
-            conn.rollback();
-            return returnResult;
+            e.printStackTrace();
+            db.closeConnection(false);
+            throw new RuntimeException(e);
         }
-
-
-
-        //pass that into a find function in the DAO
-
-        //want to check that our database has a user with the username and password that is contained in the request object
-
-        //how do we get the username and password out of this loginrequst?
 
 
         return null;
     }
 
-//    from the specs
-//    Logs the user in
-//    Returns an authtoken.
-
-
-    //this part will interact with the dao classes. Call these methods on them
-    //helper function that can validade the login rquest and get a user out of it.
-    //get the username and password from the request...go to the databse and look to see if they match
-    //this will determine that the user is validated...CREATE AN AUTH TOKEN HERE...return the auth token in the result object
-    //this is what you will give back to the handler
-    //could manually create user in the same create table statements do an insert user with the DB browser tool.
-
-    //create database object here!!!
-
+//end of class
 
 }

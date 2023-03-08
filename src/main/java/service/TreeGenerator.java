@@ -85,10 +85,6 @@ public class TreeGenerator {
         //insert birth and death for parents
 
 
-
-        myConnection.commit();
-        myConnection.close();
-
         //possible add a new database and connection. Open and close before doing anything
         //don't try and open database multiple times
         return basePerson;

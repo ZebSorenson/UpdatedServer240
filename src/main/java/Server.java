@@ -89,6 +89,8 @@ public class Server {
 
         server.createContext("/load", new LoadHandler());
 
+        server.createContext("/person/", new PersonIDHandler());
+
 
 
 

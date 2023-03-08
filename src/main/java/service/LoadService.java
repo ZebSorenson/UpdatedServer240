@@ -81,7 +81,7 @@ public class LoadService {
             result.setSuccess(true);
             result.setMessage("Successfully added " + numUsers+ " users, "+ numPeople+" persons, and " + numEvents+" events to the database.");
             System.out.println("you have arrived at the end of the try block");
-           db.closeConnection(true);
+            db.closeConnection(true);
 
         }  catch (DataAccessException e) {
             result.setMessage("A DataAccess exception was caught while attempting to clear");

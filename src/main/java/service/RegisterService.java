@@ -2,10 +2,7 @@ package service;
 
 import RequestResult.RegisterRequest;
 import RequestResult.RegisterResult;
-import dao.DataAccessException;
-import dao.Database;
-import dao.PersonDao;
-import dao.UserDao;
+import dao.*;
 import model.Authtoken;
 import model.Person;
 import model.User;
@@ -49,28 +46,33 @@ public class RegisterService {
 
         User registerUser = createUser(regReq);
 
-
-
-
-
         Connection conn = db.getConnection();
 
         try{
 
             UserDao userDataAccess = new UserDao(conn);
-            PersonDao dataAccessPerson = new PersonDao(db.getConnection());
-            userDataAccess.clear(); //DELETE ME LATER DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE
-            dataAccessPerson.clear(); //DELETE LATER
-            userDataAccess.insert(registerUser);
 
-            String newAuthToken = UUID. randomUUID().toString();
+            PersonDao dataAccessPerson = new PersonDao(db.getConnection());
+
+            userDataAccess.insert(registerUser); //insert the new user into the database
+
+          // insert the new authToken for the user into the database
+
+            String uniqueTokenString = UUID. randomUUID().toString();
 
             RegisterResult returnResult = new RegisterResult();
 
             //create the return object
 
-            returnResult.setAuthtoken(newAuthToken);
-            System.out.println("The authToken to test with is...DELETE THIS CODE..."+newAuthToken); //DELETE ME!!!
+            returnResult.setAuthtoken(uniqueTokenString);
+
+            Authtoken newAuthTokenObject = new Authtoken(uniqueTokenString, registerUser.getUsername());
+
+            AuthtokenDao authTokenDataAccess = new AuthtokenDao(db.getConnection());
+
+            authTokenDataAccess.insert(newAuthTokenObject);
+
+            System.out.println("The authToken to test with is...DELETE THIS CODE..."+uniqueTokenString); //DELETE ME!!!
 
             returnResult.setUsername(registerUser.getUsername());
 
@@ -85,14 +87,7 @@ public class RegisterService {
             Person userPerson = registerTree.generatePersonTree(regReq.getGender(), 4, Year.now().getValue());
             //TREE CODE ABOVE
 
-
-
-            //set the rest of the atributes of the person right here before inserting!!!!! Need a complete person!!!
-            // dataAccessPerson.insert(userPerson);
-
-          //  db.closeConnection(true); when do you close the connection??
-
-
+            db.closeConnection(true);
 
             return returnResult;
 
