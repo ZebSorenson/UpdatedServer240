@@ -3,9 +3,14 @@ package service;
 import RequestResult.LoadRequest;
 import RequestResult.LoadResult;
 import dao.*;
+import model.Authtoken;
+import model.Event;
+import model.Person;
+import model.User;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  * Clears all data from the database (just like the /clear API)
@@ -30,10 +35,15 @@ public class LoadService {
         LoadResult result = new LoadResult();
         Connection conn = db.getConnection();
 
+        int numUsers = 0;
+
+        int numPeople =0;
+
+        int numEvents = 0;
+
         try{
 
-
-
+            System.out.println("Entering the try block");
 
 
             //is this bad to have so many connections getting passed around?
@@ -46,27 +56,40 @@ public class LoadService {
             dataAccessEventDao.clear();
             personDataAccessDao.clear();
             userDataAccessDao.clear();
+
+
+            for(User user: loadReq.getUsers() ){
+                userDataAccessDao.insert(user);
+                Authtoken authtoken = new Authtoken(UUID.randomUUID().toString(), user.getUsername());
+                dataAccessAUTHDao.insert(authtoken);
+                numUsers++;
+
+            }
+
+            for(Person person: loadReq.getPersons()){
+                personDataAccessDao.insert(person);
+                numPeople++;
+            }
+
+            for(Event event: loadReq.getEvents()){
+                dataAccessEventDao.insert(event);
+                numEvents++;
+            }
+
+
+
             result.setSuccess(true);
-            conn.commit();
-            conn.close();
-            result.setMessage("Clear succeeded");
-            result.setSuccess(true);
+            result.setMessage("Successfully added " + numUsers+ " users, "+ numPeople+" persons, and " + numEvents+" events to the database.");
             System.out.println("you have arrived at the end of the try block");
+           db.closeConnection(true);
 
-        } catch (SQLException e) {
-            result.setMessage("A SQL exception was caught while attempting to clear");
-            result.setSuccess(false);
-            conn.rollback();
-            conn.close();
-
-
-            throw new RuntimeException(e);
-        } catch (DataAccessException e) {
+        }  catch (DataAccessException e) {
             result.setMessage("A DataAccess exception was caught while attempting to clear");
             result.setSuccess(false);
-            conn.rollback();
-            conn.close();
-            throw new RuntimeException(e);
+            db.closeConnection(false);
+            e.printStackTrace();
+            return result;
+
         }
 
 

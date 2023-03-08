@@ -40,20 +40,30 @@ public class LoadHandler implements HttpHandler {
 
 
                     // Display/log the request JSON data
-                    System.out.println(reqData);
+                    //System.out.println(reqData);
 
                     Gson gson = new Gson();
-
+                    System.out.println("Making request");
                     LoadRequest request = (LoadRequest)gson.fromJson(reqData, LoadRequest.class); //turning json string into a request
 
                     LoadService service = new LoadService();
 
+                    System.out.println("Entering the service function");
+
+
                     LoadResult result = service.load(request); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
                     //if yes, then it will send back a result object with an Auth token
 
+                    if(result.getSuccess()==true){
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                        success = true;
+                    }else{
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                    }
+
                     // service.login(request);
 
-                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+
 
                     OutputStream resBody = exchange.getResponseBody();
 
@@ -63,20 +73,9 @@ public class LoadHandler implements HttpHandler {
 
                     resBody.close();
 
+                    exchange.getResponseBody().close();
 
-                    success = true;
 
-
-            }
-
-            if (!success) {
-                // The HTTP request was invalid somehow, so we return a "bad request"
-                // status code to the client.
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-
-                // We are not sending a response body, so close the response body
-                // output stream, indicating that the response is complete.
-                exchange.getResponseBody().close();
             }
         }
         catch (IOException e) {
