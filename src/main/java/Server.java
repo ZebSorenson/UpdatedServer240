@@ -93,6 +93,8 @@ public class Server {
 
         server.createContext("/person", new PersonHandler()); // this is to get ALL persons
 
+        server.createContext("/event/", new EventIDHandler());
+
 
 
 
