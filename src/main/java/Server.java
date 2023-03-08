@@ -95,6 +95,8 @@ public class Server {
 
         server.createContext("/event/", new EventIDHandler());
 
+        server.createContext("/event", new EventHandler());
+
 
 
 

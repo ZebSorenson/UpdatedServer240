@@ -3,6 +3,7 @@ package dao;
 import model.Event;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * An EventDao. This will allow us to manipulate data of an Even model object
@@ -117,6 +118,34 @@ public class EventDao {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DataAccessException("Error encountered while clearing the person table");
+        }
+    }
+
+
+    public Event[] getAllEventsForUsername(String username) throws DataAccessException {
+
+        ResultSet rs = null;
+
+        ArrayList<Event> eventArrayList = new ArrayList<>();
+
+
+        String sql = "SELECT * FROM Events WHERE associatedUsername = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+
+            rs = stmt.executeQuery();
+
+            while(rs.next()){
+                Event eventToAdd = new Event(rs.getString("eventID"), rs.getString("associatedUsername"),rs.getString("personID"),
+                        rs.getFloat("latitude"), rs.getFloat("longitude"), rs.getString("country"), rs.getString("city"), rs.getString("eventType"), rs.getInt("year"));
+                eventArrayList.add(eventToAdd);
+            }
+
+            return eventArrayList.toArray(new Event[eventArrayList.size()]);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while looking for Events connected to username");
         }
     }
 

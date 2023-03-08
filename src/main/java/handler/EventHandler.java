@@ -115,6 +115,9 @@ public class EventHandler implements HttpHandler {
 
             // Display/log the stack trace
             e.printStackTrace();
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
 
