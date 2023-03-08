@@ -1,26 +1,27 @@
 package handler;
 
-import RequestResult.LoginRequest;
-import RequestResult.LoginResult;
-import RequestResult.RegisterRequest;
-import RequestResult.RegisterResult;
+import RequestResult.*;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dao.DataAccessException;
+import service.PersonIDService;
+import service.PersonService;
 import service.RegisterService;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URI;
 
 
-public class RegisterHandler implements HttpHandler {
+public class PersonHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-       // exchange.getRequestURI().toString(); this will give the info from the URL
+        // exchange.getRequestURI().toString(); this will give the info from the URL
         //Split method on a String object and it will split the String into an array. Can give it / and seperate as needed
+
 
 
 
@@ -28,15 +29,17 @@ public class RegisterHandler implements HttpHandler {
 
         try {
 
-            if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
+
+
+            if (exchange.getRequestMethod().equalsIgnoreCase("get")) {
 
                 // Get the HTTP request headers
                 Headers reqHeaders = exchange.getRequestHeaders();
                 // Check to see if an "Authorization" header is present
-                //if (reqHeaders.containsKey("Authorization")) { // what does this mean?
+                if (reqHeaders.containsKey("Authorization")) { // what does this mean?
 
                     // Extract the auth token from the "Authorization" header
-                   // String authToken = reqHeaders.getFirst("Authorization");
+                    String authToken = reqHeaders.getFirst("Authorization");
 
                     // Verify that the auth token is the one we're looking for
                     // (this is not realistic, because clients will use different
@@ -52,16 +55,23 @@ public class RegisterHandler implements HttpHandler {
                     String reqData = readString(reqBody);
 
 
+
+
                     // Display/log the request JSON data
                     System.out.println(reqData);
 
                     Gson gson = new Gson();
 
-                    RegisterRequest request = (RegisterRequest)gson.fromJson(reqData, RegisterRequest.class); //turning json string into a request
 
-                    RegisterService service = new RegisterService();
+                    PersonService service = new PersonService();
 
-                    RegisterResult result = service.register(request); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
+                    //might need to check if the result was succesfull
+                    //send the appropriate type of header.
+
+
+                    PersonResult  result = service.GetAllPersons(authToken);
+
+                    // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
                     //if yes, then it will send back a result object with an Auth token
 
                     // service.login(request);
@@ -79,7 +89,7 @@ public class RegisterHandler implements HttpHandler {
 
                     success = true;
 
-               // }
+                }
             }
 
             if (!success) {

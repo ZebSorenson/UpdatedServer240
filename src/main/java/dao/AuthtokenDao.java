@@ -31,6 +31,29 @@ public class AuthtokenDao {
 
     }
 
+    public Authtoken findAuthToken(String authTokenString) throws DataAccessException {
+
+        ResultSet rs = null;
+
+
+        String sql = "SELECT * FROM AuthorizationToken WHERE authtoken = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, authTokenString);
+
+             rs = stmt.executeQuery();
+
+             if(rs.next()){
+                 Authtoken authTokenToReturn = new Authtoken(rs.getString("authtoken"), rs.getString("username"));
+                 return authTokenToReturn;
+             }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while searching for an AuthToken");
+        }
+        return null;
+    }
+
     //will deffinitely need find functions but can write them later when you see a need for what needs to be passed into them
 
     public void clear() throws  DataAccessException{

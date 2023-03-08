@@ -1,9 +1,11 @@
 package dao;
 
+import model.Authtoken;
 import model.Event;
 import model.Person;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Person Data Access class. This will be used to manipulate data of person objects
@@ -142,5 +144,34 @@ public class PersonDao {
  }
 
 
-    //end of class
+ public Person[] getAllPeopleWithUsername(String username) throws DataAccessException {
+
+  ResultSet rs = null;
+
+  ArrayList<Person> personArrayList = new ArrayList<>();
+
+
+  String sql = "SELECT * FROM Person WHERE associatedUsername = ?;";
+  try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+   stmt.setString(1, username);
+
+   rs = stmt.executeQuery();
+
+   while(rs.next()){
+    Person personToAdd = new Person(rs.getString("personID"), rs.getString("associatedUsername"),rs.getString("firstName"),
+            rs.getString("lastName"), rs.getString("gender"), rs.getString("fatherID"), rs.getString("motherID"), rs.getString("spouseID"));
+    personArrayList.add(personToAdd);
+   }
+
+   return personArrayList.toArray(new Person[personArrayList.size()]);
+
+  } catch (SQLException e) {
+   e.printStackTrace();
+   throw new DataAccessException("Error encountered while searching for an AuthToken");
+  }
+ }
+
+
+
+ //end of class
 }

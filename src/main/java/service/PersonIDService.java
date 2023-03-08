@@ -32,6 +32,9 @@ public class PersonIDService {
 
         //HOW DO WE DEAL WITH THE AUTHTOKEN??
 
+        //use your finds to find the username connect to the authtoken and the personID string and then double
+        //check to make sure they are conneceted to the same things.
+
         try{
             Database db = new Database();
             Connection conn = db.getConnection();
