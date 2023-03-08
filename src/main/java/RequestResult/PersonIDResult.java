@@ -63,7 +63,7 @@ public class PersonIDResult {
      */
 
 
-    String success;
+    boolean success;
 
     //error, will also use success
 
@@ -139,11 +139,11 @@ public class PersonIDResult {
         this.spouseID = spouseID;
     }
 
-    public String getSuccess() {
+    public boolean getSuccess() {
         return success;
     }
 
-    public void setSuccess(String success) {
+    public void setSuccess(boolean success) {
         this.success = success;
     }
 

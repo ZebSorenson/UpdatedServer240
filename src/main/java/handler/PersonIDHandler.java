@@ -11,6 +11,7 @@ import service.RegisterService;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URI;
 
 
 public class PersonIDHandler implements HttpHandler {
@@ -27,19 +28,21 @@ public class PersonIDHandler implements HttpHandler {
 
         try {
 
-            String apiCall = null;
-            String personIDString = null;
+            // get the request URI from the exchange
+            URI uri = exchange.getRequestURI();
+            String uriString = uri.toString();
 
-            String requestUri = exchange.getRequestURI().toString();
-            String[] parts = requestUri.split("/");
-            if (parts.length == 4 && parts[1].equals("person")) {
-                apiCall = parts[2];
-                personIDString = parts[3];
+// split the URI into its constituent parts
+            String[] parts = uriString.split("/");
 
-                // set name and username in exchange object
-            }
+// extract the person ID from the URI
+            String personId = parts[2];
 
-            if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
+// extract the "person" part of the URI
+            String person = parts[1];
+
+
+            if (exchange.getRequestMethod().equalsIgnoreCase("get")) {
 
                 // Get the HTTP request headers
                 Headers reqHeaders = exchange.getRequestHeaders();
@@ -71,7 +74,7 @@ public class PersonIDHandler implements HttpHandler {
 
                     PersonIDService service = new PersonIDService();
 
-                    PersonIDResult result = service.RetrievePersonID(personIDString);
+                    PersonIDResult result = service.RetrievePersonID(personId);
 
                     // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
                     //if yes, then it will send back a result object with an Auth token
