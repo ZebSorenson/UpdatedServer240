@@ -46,6 +46,7 @@ public class ClearHandler implements HttpHandler {
 
                     // service.login(request);
 
+
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 
                     OutputStream resBody = exchange.getResponseBody();

@@ -18,18 +18,9 @@ public class LoginHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-
-        // It is also unrealistic in that it accepts only one specific
-        // hard-coded auth token.
-        // However, it does demonstrate the following:
-        // 1. How to get the HTTP request type (or, "method")
-        // 2. How to access HTTP request headers
-        // 3. How to read JSON data from the HTTP request body
-        // 4. How to return the desired status code (200, 404, etc.)
-        //		in an HTTP response
-        // 5. How to check an incoming HTTP request for an auth token
-
         boolean success = false;
+        Gson gson = new Gson();
+        LoginResult result = null;
 
         try {
             // Determine the HTTP request type (GET, POST, etc.).
@@ -53,37 +44,20 @@ public class LoginHandler implements HttpHandler {
                 System.out.println(reqData);
 
 
-                Gson gson = new Gson();
+
 
                 LoginRequest request = (LoginRequest) gson.fromJson(reqData, LoginRequest.class); //turning json string into a request
 
                 LoginService service = new LoginService();
 
-                LoginResult result = service.login(request); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
+               result = service.login(request); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
                 //if yes, then it will send back a result object with an Auth token
 
-                // service.login(request);
-
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-
-                OutputStream resBody = exchange.getResponseBody();
-
-                String jSonResult = gson.toJson(result); //may need response body? should work without but just in case.
-
-                writeString(jSonResult, resBody);
-
-                resBody.close();
 
 
-                // Start sending the HTTP response to the client, starting with
-                // the status code and any defined headers.
-//                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-//
-//                        // We are not sending a response body, so close the response body
-//                        // output stream, indicating that the response is complete.
-//                        exchange.getResponseBody().close();
 
-                success = true;
+
+                success = result.getSuccess();
 
 
             }
@@ -95,8 +69,20 @@ public class LoginHandler implements HttpHandler {
 
                 // We are not sending a response body, so close the response body
                 // output stream, indicating that the response is complete.
-                exchange.getResponseBody().close();
+
+            }else{
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+
+
             }
+
+            OutputStream resBody = exchange.getResponseBody();
+
+            String jSonResult = gson.toJson(result); //may need response body? should work without but just in case.
+
+            writeString(jSonResult, resBody);
+
+            resBody.close();
         } catch (IOException e) {
             // Some kind of internal error has occurred inside the server (not the
             // client's fault), so we return an "internal server error" status code

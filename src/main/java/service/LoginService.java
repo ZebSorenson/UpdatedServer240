@@ -65,6 +65,7 @@ public class LoginService {
         boolean successLogin = false;
 
         try {
+
             Connection conn = db.getConnection();
             UserDao userDataAccess = new UserDao(conn);
             AuthtokenDao authTokenDataAccess = new AuthtokenDao(conn);
@@ -76,10 +77,7 @@ public class LoginService {
                     UUID myUUID = UUID.randomUUID();
 
                     String uniqueString = myUUID.toString();
-                    //the username and password match!
-                    System.out.println("They should match! If you've made it this far, things are going well");
 
-                    System.out.println(userName + " " + passWord);
 
                     returnResult.setAuthtoken(uniqueString);
 
