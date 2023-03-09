@@ -56,7 +56,7 @@ public class RegisterService {
 
             userDataAccess.insert(registerUser); //insert the new user into the database
 
-          // insert the new authToken for the user into the database
+            // insert the new authToken for the user into the database
 
             String uniqueTokenString = UUID. randomUUID().toString();
 
@@ -80,14 +80,14 @@ public class RegisterService {
 
             returnResult.setSuccess(true);
 
-           TreeGenerator registerTree = new TreeGenerator(conn, returnResult.getUsername()); // creating our tree generator
+            TreeGenerator registerTree = new TreeGenerator(conn, returnResult.getUsername()); // creating our tree generator
             //giving our tree generator our connection to the database and the username for which we're creating the tree\
 
 
             Person userPerson = registerTree.generatePersonTree(regReq.getGender(), 4, Year.now().getValue());
             //TREE CODE ABOVE
 
-           db.closeConnection(true); //PUT ME BACK!!
+            db.closeConnection(true); //PUT ME BACK!!
 
             return returnResult;
 
@@ -107,7 +107,7 @@ public class RegisterService {
             returnResult.setMessage("Error trying to register the user");
             returnResult.setSuccess(false);
         }
-    return null;
+        return null;
     }
 
 

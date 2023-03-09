@@ -163,6 +163,7 @@ public class TreeGenerator {
 
         Person newPerson = new Person(user.getPersonID(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getGender(),null, null, null);
 
+        numPeople++;
         return newPerson;
     }
 
@@ -203,12 +204,16 @@ public class TreeGenerator {
 
             createParents(father, currentGeneration-1, personDataAccess, eventDataAccess, year-25);
 
-            personDataAccess.insert(mother); // put all of service in a try
+            personDataAccess.insert(mother);
+         // put all of service in a try
 
             personDataAccess.insert(father);
 
+
             eventDataAccess.insert(fatherMarriageEvent);
+            numEvents++;
             eventDataAccess.insert(motherMarriageEvent);
+            numEvents++;
 
             Event fatherBirth =generateParentBirthEvent(father.getPersonID(), year-50);
             Event motherEvent =generateParentBirthEvent(mother.getPersonID(), year-50);
@@ -219,10 +224,14 @@ public class TreeGenerator {
 
 
             eventDataAccess.insert(fatherBirth);
+            numEvents++;
             eventDataAccess.insert(motherEvent);
+            numEvents++;
 
             eventDataAccess.insert(fatherDeath);
+            numEvents++;
             eventDataAccess.insert(motherDeath);
+            numEvents++;
 
             numPeople+=2;
 
@@ -257,6 +266,7 @@ public class TreeGenerator {
 
 
         Event birthEvent = new Event(UUID.randomUUID().toString(),user.getUsername(),user.getPersonID(), latitude,longitude,country,city,"Birth",currYear-20);
+        numEvents++;
 
         return birthEvent;
     }
@@ -301,6 +311,14 @@ public class TreeGenerator {
 
         return  parentDeathEvent;
 
+    }
+
+    public int getNumEvents(){
+        return numEvents;
+    }
+
+    public int getNumPeople(){
+        return numPeople;
     }
 
 

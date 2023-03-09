@@ -83,6 +83,7 @@ public class LoginHandler implements HttpHandler {
             writeString(jSonResult, resBody);
 
             resBody.close();
+
         } catch (IOException e) {
             // Some kind of internal error has occurred inside the server (not the
             // client's fault), so we return an "internal server error" status code

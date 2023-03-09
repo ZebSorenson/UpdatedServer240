@@ -79,7 +79,8 @@ public class FillService {
 
                 newPersonTree.generatePersonTree(basePerson.getGender(), generations, currYear);
 
-                result.setMesssage("Successfully");
+                result.setMesssage("Successfully added "+ newPersonTree.getNumPeople()+" persons and "+newPersonTree.getNumEvents()+" events to the database.");
+                //THIS ABOVE NEEDS TO BE CORRECT!
 
                 result.setSuccess(true);
 

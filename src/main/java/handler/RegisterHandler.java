@@ -19,7 +19,7 @@ public class RegisterHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-       // exchange.getRequestURI().toString(); this will give the info from the URL
+        // exchange.getRequestURI().toString(); this will give the info from the URL
         //Split method on a String object and it will split the String into an array. Can give it / and seperate as needed
 
 
@@ -35,51 +35,51 @@ public class RegisterHandler implements HttpHandler {
                 // Check to see if an "Authorization" header is present
                 //if (reqHeaders.containsKey("Authorization")) { // what does this mean?
 
-                    // Extract the auth token from the "Authorization" header
-                   // String authToken = reqHeaders.getFirst("Authorization");
+                // Extract the auth token from the "Authorization" header
+                // String authToken = reqHeaders.getFirst("Authorization");
 
-                    // Verify that the auth token is the one we're looking for
-                    // (this is not realistic, because clients will use different
-                    // auth tokens over time, not the same one all the time).
-                    // if (authToken.equals("afj232hj2332")) { // I don't need this correct?
+                // Verify that the auth token is the one we're looking for
+                // (this is not realistic, because clients will use different
+                // auth tokens over time, not the same one all the time).
+                // if (authToken.equals("afj232hj2332")) { // I don't need this correct?
 
-                    // Extract the JSON string from the HTTP request body
+                // Extract the JSON string from the HTTP request body
 
-                    // Get the request body input stream
-                    InputStream reqBody = exchange.getRequestBody();
+                // Get the request body input stream
+                InputStream reqBody = exchange.getRequestBody();
 
-                    // Read JSON string from the input stream
-                    String reqData = readString(reqBody);
-
-
-                    // Display/log the request JSON data
-                    System.out.println(reqData);
-
-                    Gson gson = new Gson();
-
-                    RegisterRequest request = (RegisterRequest)gson.fromJson(reqData, RegisterRequest.class); //turning json string into a request
-
-                    RegisterService service = new RegisterService();
-
-                    RegisterResult result = service.register(request); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
-                    //if yes, then it will send back a result object with an Auth token
-
-                    // service.login(request);
-
-                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-
-                    OutputStream resBody = exchange.getResponseBody();
-
-                    String jSonResult = gson.toJson(result); //may need response body? should work without but just in case.
-
-                    writeString(jSonResult, resBody);
-
-                    resBody.close();
+                // Read JSON string from the input stream
+                String reqData = readString(reqBody);
 
 
-                    success = true;
+                // Display/log the request JSON data
+                System.out.println(reqData);
 
-               // }
+                Gson gson = new Gson();
+
+                RegisterRequest request = (RegisterRequest)gson.fromJson(reqData, RegisterRequest.class); //turning json string into a request
+
+                RegisterService service = new RegisterService();
+
+                RegisterResult result = service.register(request); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
+                //if yes, then it will send back a result object with an Auth token
+
+                // service.login(request);
+
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+
+                OutputStream resBody = exchange.getResponseBody();
+
+                String jSonResult = gson.toJson(result); //may need response body? should work without but just in case.
+
+                writeString(jSonResult, resBody);
+
+                resBody.close();
+
+
+                success = true;
+
+                // }
             }
 
             if (!success) {

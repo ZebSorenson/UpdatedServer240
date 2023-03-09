@@ -23,8 +23,9 @@ public class ClearHandler implements HttpHandler {
         System.out.println("You have arrived at the ClearHandler");
 
 
-
         boolean success = false;
+        Gson gson = new Gson();
+        ClearResult result = null;
 
         try {
 
@@ -36,33 +37,13 @@ public class ClearHandler implements HttpHandler {
                 // Check to see if an "Authorization" header is present
 
 
-
-                    Gson gson = new Gson();
-
-                    ClearService service = new ClearService();
+                ClearService service = new ClearService();
 
 
-                    ClearResult result = service.clear();
+                result = service.clear();
 
-                    // service.login(request);
+                success = result.getSuccess();
 
-
-                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-
-                    OutputStream resBody = exchange.getResponseBody();
-
-                    String jSonResult = gson.toJson(result); //may need response body? should work without but just in case.
-
-                    writeString(jSonResult, resBody);
-
-                    resBody.close();
-
-
-                    success = true;
-
-
-
-                    // } //put me back!!
 
             }
 
@@ -73,10 +54,20 @@ public class ClearHandler implements HttpHandler {
 
                 // We are not sending a response body, so close the response body
                 // output stream, indicating that the response is complete.
-                exchange.getResponseBody().close();
+
+            } else {
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
             }
-        }
-        catch (IOException e) {
+
+            OutputStream resBody = exchange.getResponseBody();
+
+            String jSonResult = gson.toJson(result); //may need response body? should work without but just in case.
+
+            writeString(jSonResult, resBody);
+
+            resBody.close();
+
+        } catch (IOException e) {
             // Some kind of internal error has occurred inside the server (not the
             // client's fault), so we return an "internal server error" status code
             // to the client.
@@ -114,7 +105,6 @@ public class ClearHandler implements HttpHandler {
     }
 
     //good idea to put these two above functions in a shared class for all to use
-
 
 
     //end of class
