@@ -75,7 +75,7 @@ public class EventIDHandler implements HttpHandler {
 
                     EventIDService service = new EventIDService();
 
-                    EventIDResult result = service.GetSingleEventID(eventID);
+                    EventIDResult result = service.GetSingleEventID(eventID, authToken);
 
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 

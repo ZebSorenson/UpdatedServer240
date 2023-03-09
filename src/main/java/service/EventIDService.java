@@ -2,10 +2,7 @@ package service;
 
 import RequestResult.EventIDResult;
 import RequestResult.PersonIDResult;
-import dao.DataAccessException;
-import dao.Database;
-import dao.EventDao;
-import dao.PersonDao;
+import dao.*;
 import model.Authtoken;
 import model.Event;
 import model.Person;
@@ -24,7 +21,7 @@ public class EventIDService {
      * @return an eventIDResult object containing the event data if the service is successful and error info if not
      */
 
-    public EventIDResult GetSingleEventID(String eventIDString){
+    public EventIDResult GetSingleEventID(String eventIDString, String authToken){
 
         System.out.println("You have entered the eventID service function");
 
@@ -37,9 +34,19 @@ public class EventIDService {
 
             Event eventToFind = eventDataAccess.find(eventIDString);
 
+            AuthtokenDao authDataAccess = new AuthtokenDao(conn);
+
+            if(!authDataAccess.isValidAuth(eventToFind.getAssociatedUsername(),authToken) ){
+                EventIDResult result = new EventIDResult();
+                result.setSuccess(false);
+                result.setMessage("Invalid authToken");
+                db.closeConnection(false);
+                return result;
+            }
 
 
-            if(eventToFind!=null){
+
+            else if(eventToFind!=null){
 
                 EventIDResult result = new EventIDResult();
 

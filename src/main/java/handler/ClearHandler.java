@@ -22,49 +22,31 @@ public class ClearHandler implements HttpHandler {
 
         System.out.println("You have arrived at the ClearHandler");
 
-
         boolean success = false;
         Gson gson = new Gson();
         ClearResult result = null;
 
         try {
-
-
             if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
 
                 // Get the HTTP request headers
                 Headers reqHeaders = exchange.getRequestHeaders();
                 // Check to see if an "Authorization" header is present
 
-
                 ClearService service = new ClearService();
-
-
                 result = service.clear();
-
                 success = result.getSuccess();
-
-
             }
 
-            if (!success) {
-                // The HTTP request was invalid somehow, so we return a "bad request"
-                // status code to the client.
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-
-                // We are not sending a response body, so close the response body
-                // output stream, indicating that the response is complete.
-
-            } else {
+            if (success) {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+            } else {
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
             }
 
             OutputStream resBody = exchange.getResponseBody();
-
-            String jSonResult = gson.toJson(result); //may need response body? should work without but just in case.
-
+            String jSonResult = gson.toJson(result);
             writeString(jSonResult, resBody);
-
             resBody.close();
 
         } catch (IOException e) {
@@ -80,8 +62,6 @@ public class ClearHandler implements HttpHandler {
             // Display/log the stack trace
             e.printStackTrace();
         }
-
-
     }
 
     /*
@@ -103,7 +83,6 @@ public class ClearHandler implements HttpHandler {
         sw.write(str);
         sw.flush();
     }
-
     //good idea to put these two above functions in a shared class for all to use
 
 
