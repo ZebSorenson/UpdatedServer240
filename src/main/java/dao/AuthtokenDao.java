@@ -66,5 +66,25 @@ public class AuthtokenDao {
         }
     }
 
+    public boolean isValidAuth(String userName, String authToken) throws DataAccessException {
+        String sql = "SELECT * FROM AuthorizationToken WHERE username = ? AND authtoken = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, userName);
+            stmt.setString(2, authToken);
+
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while checking if auth token is valid");
+        }
+    }
+
+
+
+
+
+
+
 //end of class
 }

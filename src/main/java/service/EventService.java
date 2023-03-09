@@ -25,6 +25,8 @@ public class EventService {
 
         Connection conn = db.getConnection();
 
+        //need to check to make sure this authToken is associated with the correct user.
+
 
         try {
             AuthtokenDao authTokenDataAccess = new AuthtokenDao(conn);
@@ -39,7 +41,15 @@ public class EventService {
                 result.setSuccess(false);
                 result.setMessage("Error while looking for authtoken");
                 return result;
-            } else {
+            }else if(!authTokenDataAccess.isValidAuth(myAuth.getUsername(), tokenString)) {
+                db.closeConnection(false);
+                EventResult result = new EventResult();
+                result.setSuccess(false);
+                result.setMessage("Error while looking for authtoken");
+                return result;
+
+            }
+            else {
                 EventResult result = new EventResult();
                 result.setData(eventDataAccess.getAllEventsForUsername(myAuth.getUsername()));
                 result.setSuccess(true);
@@ -48,10 +58,13 @@ public class EventService {
             }
 
 
-        } finally {
-
+        } catch (DataAccessException e){
+            db.closeConnection(false);
+            EventResult result = new EventResult();
+            result.setSuccess(false);
+            result.setMessage("Error while looking for authtoken");
+            return result;
         }
-
 
     }
 
