@@ -87,7 +87,7 @@ public class RegisterService {
             Person userPerson = registerTree.generatePersonTree(regReq.getGender(), 4, Year.now().getValue());
             //TREE CODE ABOVE
 
-            db.closeConnection(true);
+           db.closeConnection(true); //PUT ME BACK!!
 
             return returnResult;
 

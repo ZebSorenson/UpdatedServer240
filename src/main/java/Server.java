@@ -155,28 +155,6 @@ public class Server {
 //            System.out.println(location.getLatitude());
 //        }
 
-//        maleNameGenerator maleNames = new maleNameGenerator();
-//
-//        maleNames.getMaleNameArray();
-
-//        sirNameGenerator sirnames = new sirNameGenerator();
-//
-//        sirnames.getSireNameList();
-
-
-//        maleNameGenerator maleNames = new maleNameGenerator();
-//
-//        int max = maleNames.getMaleNameArray().size();
-//
-//        Random randomFirstName = new Random();
-//
-//        int randomNameIndex = randomFirstName.nextInt(max+1); //arrays start at 0 in Java, right?
-//
-//      System.out.println(maleNames.getMaleNameArray().get(randomNameIndex));
-
-        //getting random names is working!
-
-
 
 
 

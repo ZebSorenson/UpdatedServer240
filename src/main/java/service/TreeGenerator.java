@@ -86,7 +86,9 @@ public class TreeGenerator {
 
 
         //possible add a new database and connection. Open and close before doing anything
-        //don't try and open database multiple times
+
+
+
         return basePerson;
     }
 

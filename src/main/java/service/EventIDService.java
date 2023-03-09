@@ -64,6 +64,7 @@ public class EventIDService {
 
             result.setMessage("Data access exception caught");
             result.setSuccess(false);
+
             return result;
 
         }
