@@ -61,12 +61,20 @@ public class RegisterHandler implements HttpHandler {
 
                 RegisterService service = new RegisterService();
 
+
                 RegisterResult result = service.register(request); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
                 //if yes, then it will send back a result object with an Auth token
 
+                if (result.getSuccess()) {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                } else {
+                    // If the result is not successful, send HTTP_BAD_REQUEST
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                }
+
                 // service.login(request);
 
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+               // exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 
                 OutputStream resBody = exchange.getResponseBody();
 

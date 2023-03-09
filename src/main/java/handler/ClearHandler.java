@@ -36,18 +36,20 @@ public class ClearHandler implements HttpHandler {
                 ClearService service = new ClearService();
                 result = service.clear();
                 success = result.getSuccess();
-            }
 
-            if (success) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-            } else {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-            }
 
-            OutputStream resBody = exchange.getResponseBody();
-            String jSonResult = gson.toJson(result);
-            writeString(jSonResult, resBody);
-            resBody.close();
+                if (success) {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                } else {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                }
+
+                OutputStream resBody = exchange.getResponseBody();
+                String jSonResult = gson.toJson(result);
+                writeString(jSonResult, resBody);
+                resBody.close();
+
+            }
 
         } catch (IOException e) {
             // Some kind of internal error has occurred inside the server (not the

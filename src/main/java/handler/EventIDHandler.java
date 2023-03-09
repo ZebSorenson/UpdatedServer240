@@ -77,7 +77,14 @@ public class EventIDHandler implements HttpHandler {
 
                     EventIDResult result = service.GetSingleEventID(eventID, authToken);
 
-                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                    if (result.getSuccess()) {
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                    } else {
+                        // If the result is not successful, send HTTP_BAD_REQUEST
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                    }
+
+                   // exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 
                     OutputStream resBody = exchange.getResponseBody();
 

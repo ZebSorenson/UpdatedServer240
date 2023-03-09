@@ -44,13 +44,29 @@ public class RegisterService {
 
         System.out.println("You have arrived at the register SERVICE function");
 
+        Connection conn = db.getConnection();
+
+        UserDao userDataAccess = new UserDao(conn);
+
+        if(userDataAccess.findUsername(regReq.getUsername())!=null){
+
+            db.closeConnection(false);
+            RegisterResult returnResult = new RegisterResult();
+            returnResult.setMessage("Error trying to register the user");
+            returnResult.setSuccess(false);
+            return returnResult;
+
+        }
+
+
+
         User registerUser = createUser(regReq);
 
-        Connection conn = db.getConnection();
+
 
         try{
 
-            UserDao userDataAccess = new UserDao(conn);
+
 
             PersonDao dataAccessPerson = new PersonDao(db.getConnection());
 

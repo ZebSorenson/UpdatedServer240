@@ -39,7 +39,7 @@ public class EventIDService {
             if(!authDataAccess.isValidAuth(eventToFind.getAssociatedUsername(),authToken) || eventToFind==null ){
                 EventIDResult result = new EventIDResult();
                 result.setSuccess(false);
-                result.setMessage("Invalid authToken");
+                result.setMessage("Error: Invalid authToken");
                 db.closeConnection(false);
                 return result;
             }

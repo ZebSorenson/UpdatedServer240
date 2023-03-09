@@ -20,16 +20,9 @@ public class EventHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-        // exchange.getRequestURI().toString(); this will give the info from the URL
-        //Split method on a String object and it will split the String into an array. Can give it / and seperate as needed
-
-
-
-
         boolean success = false;
 
         try {
-
 
 
             if (exchange.getRequestMethod().equalsIgnoreCase("get")) {
@@ -66,6 +59,8 @@ public class EventHandler implements HttpHandler {
                     success = true;
                 }
             }
+
+            //can we just git rid of what is here?
 
             if (!success) {
                 // The HTTP request was invalid somehow, so we return a "bad request"
@@ -119,7 +114,6 @@ public class EventHandler implements HttpHandler {
     }
 
     //good idea to put these two above functions in a shared class for all to use
-
 
 
     //end of class
