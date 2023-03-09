@@ -34,10 +34,7 @@ public class ClearHandler implements HttpHandler {
                 // Get the HTTP request headers
                 Headers reqHeaders = exchange.getRequestHeaders();
                 // Check to see if an "Authorization" header is present
-                if (reqHeaders.containsKey("Authorization")) {
 
-                    // Extract the auth token from the "Authorization" header
-                    String authToken = reqHeaders.getFirst("Authorization"); //what does this mean?
 
 
                     Gson gson = new Gson();
@@ -65,7 +62,7 @@ public class ClearHandler implements HttpHandler {
 
 
                     // } //put me back!!
-                }
+
             }
 
             if (!success) {
