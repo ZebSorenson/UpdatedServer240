@@ -66,7 +66,7 @@ public class FillService {
             if (userDataAccess.findUsername(userName) == null) {
                 //return a null user
                 result.setSuccess(false);
-                result.setMesssage("User does not exist in the database");
+                result.setMessage("User does not exist in the database");
                 db.closeConnection(false);
                 return result;
             } else if (userDataAccess.findUsername(userName) != null) {
@@ -79,7 +79,7 @@ public class FillService {
 
                 newPersonTree.generatePersonTree(basePerson.getGender(), generations, currYear);
 
-                result.setMesssage("Successfully added "+ newPersonTree.getNumPeople()+" persons and "+newPersonTree.getNumEvents()+" events to the database.");
+                result.setMessage("Successfully added "+ newPersonTree.getNumPeople()+" persons and "+newPersonTree.getNumEvents()+" events to the database.");
                 //THIS ABOVE NEEDS TO BE CORRECT!
 
                 result.setSuccess(true);
@@ -88,17 +88,17 @@ public class FillService {
             }
 
         } catch (DataAccessException e) {
-            result.setMesssage("DataAccess Exception caught");
+            result.setMessage("DataAccess Exception caught");
             result.setSuccess(false);
             db.closeConnection(false);
             throw new RuntimeException(e);
         } catch (FileNotFoundException e) {
-            result.setMesssage("FileNotFoundException Exception caught");
+            result.setMessage("FileNotFoundException Exception caught");
             result.setSuccess(false);
             db.closeConnection(false);
             throw new RuntimeException(e);
         } catch (SQLException e) {
-            result.setMesssage("SQLException Exception caught");
+            result.setMessage("SQLException Exception caught");
             result.setSuccess(false);
             db.closeConnection(false);
             throw new RuntimeException(e);

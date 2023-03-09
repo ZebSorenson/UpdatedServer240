@@ -11,7 +11,7 @@ public class FillResult {
      * Message to be diplayed if error is recieved in result
      */
 
-    String messsage;
+    String message;
 
     /**
      * Used to determine if request was successful or not
@@ -19,12 +19,12 @@ public class FillResult {
 
     Boolean success;
 
-    public String getMesssage() {
-        return messsage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMesssage(String messsage) {
-        this.messsage = messsage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Boolean getSuccess() {
