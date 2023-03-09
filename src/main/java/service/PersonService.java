@@ -28,6 +28,8 @@ public class PersonService {
 
         Connection conn = db.getConnection();
 
+        //want to check that this auth token is connected to the username that is the person's associated username
+
 
         try {
             AuthtokenDao authTokenDataAccess = new AuthtokenDao(conn);
@@ -42,7 +44,9 @@ public class PersonService {
                 result.setSuccess(false);
                 result.setMessage("Error while looking for authtoken");
                 return result;
-            } else {
+            }
+
+            else {
                 PersonResult result = new PersonResult();
                 result.setData(personDataAccess.getAllPeopleWithUsername(myAuth.getUsername()));
                 result.setSuccess(true);
@@ -51,8 +55,14 @@ public class PersonService {
             }
 
 
-        } finally {
-
+        } catch(DataAccessException e){
+            {
+                db.closeConnection(false);
+                PersonResult result = new PersonResult();
+                result.setSuccess(false);
+                result.setMessage("Error while looking for persons");
+                return result;
+            }
         }
 
 

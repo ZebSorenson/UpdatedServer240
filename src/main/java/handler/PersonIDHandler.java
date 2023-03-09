@@ -74,14 +74,21 @@ public class PersonIDHandler implements HttpHandler {
 
                     PersonIDService service = new PersonIDService();
 
-                    PersonIDResult result = service.RetrievePersonID(personId);
+                    PersonIDResult result = service.RetrievePersonID(personId, authToken);
+
+                    if (result.getSuccess()) {
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                    } else {
+                        // If the result is not successful, send HTTP_BAD_REQUEST
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                    }
 
                     // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
                     //if yes, then it will send back a result object with an Auth token
 
                     // service.login(request);
 
-                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                   // exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 
                     OutputStream resBody = exchange.getResponseBody();
 
@@ -119,6 +126,8 @@ public class PersonIDHandler implements HttpHandler {
 
             // Display/log the stack trace
             e.printStackTrace();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
         }
 
 
