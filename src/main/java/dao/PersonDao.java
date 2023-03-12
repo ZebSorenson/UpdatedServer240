@@ -109,14 +109,7 @@ public class PersonDao {
   }
  }
 
-    /**
-     * Will delete a person from the database bassed on their unique ID
-     * @param personID_String a unique ID used for identifying a specific person in the database
-     */
 
-    public void deletePerson(String personID_String){
-
-    }
 
     /**
      * will delete all person objects from the database
@@ -133,6 +126,10 @@ public class PersonDao {
 
 
  public void deleteUserData(String userName) throws DataAccessException {
+
+     if(userName==null){
+      throw new DataAccessException("The username was null, DataAccessException thrown");
+     }
   String sql = "DELETE FROM Person WHERE associatedUsername = ?;";
   try (PreparedStatement stmt = conn.prepareStatement(sql)) {
    stmt.setString(1, userName);

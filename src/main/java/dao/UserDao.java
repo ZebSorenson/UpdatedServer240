@@ -199,12 +199,6 @@ public class UserDao {
 
     }
 
-
-
-
-
-
-
     /**
      * will delete all data from database
      *

@@ -100,29 +100,32 @@ public class EventDao {
         }
     }
 
-    //code I have added
 
-    /**
-     * we should be able to make changes to an event details. This function will serve this purpose
-     * @param event the specific event to which we want to make a change to.
-     */
-    public void update(Event event){
-        //makes updates to even that is passed in
-    }
+
+
 
     public void deleteUserData(String userName) throws DataAccessException {
+
+        if(userName==null){
+            throw new DataAccessException("Username was null");
+        }
         String sql = "DELETE FROM Events WHERE associatedUsername = ?;";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, userName);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataAccessException("Error encountered while clearing the person table");
+            throw new DataAccessException("Error encountered while clearing event data related to user");
         }
     }
 
 
     public Event[] getAllEventsForUsername(String username) throws DataAccessException {
+
+        if(username==null){
+            throw new DataAccessException("Username was null");
+        }
+
 
         ResultSet rs = null;
 

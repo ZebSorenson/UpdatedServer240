@@ -20,7 +20,7 @@ public class PersonDAOTest {
 
     private Person testPerson;
 
-    private PersonDao ePerson;
+    private PersonDao dataAccessPerson;
 
     @BeforeEach
     public void setUp() throws DataAccessException {
@@ -35,9 +35,9 @@ public class PersonDAOTest {
         // Here, we'll open the connection in preparation for the test case to use it
         Connection conn = db.getConnection();
         //Then we pass that connection to the EventDAO, so it can access the database.
-        ePerson = new PersonDao(conn);
+        dataAccessPerson = new PersonDao(conn);
         //Let's clear the database as well so any lingering data doesn't affect our tests
-        ePerson.clear();
+        dataAccessPerson.clear();
     }
 
 
@@ -52,9 +52,9 @@ public class PersonDAOTest {
     @Test
     public void insertPass() throws DataAccessException {
         // Start by inserting a person into the database.
-        ePerson.insert(testPerson);
+        dataAccessPerson.insert(testPerson);
         // Let's use a find method to get the person that we just put in back out.
-        Person compareTest = ePerson.find(testPerson.getPersonID());
+        Person compareTest = dataAccessPerson.find(testPerson.getPersonID());
         // First lets see if our find method found anything at all. If it did then we know that we got
         // something back from our database.
         assertNotNull(compareTest);
@@ -67,9 +67,9 @@ public class PersonDAOTest {
 
     @Test
     public void insertFail() throws DataAccessException{
-        ePerson.insert(testPerson);
+        dataAccessPerson.insert(testPerson);
 
-        assertThrows(DataAccessException.class, () -> ePerson.insert(testPerson)); //we'll get a unique constraint fail error but that is expected in this test
+        assertThrows(DataAccessException.class, () -> dataAccessPerson.insert(testPerson)); //we'll get a unique constraint fail error but that is expected in this test
     }
 
     @Test
@@ -82,21 +82,21 @@ public class PersonDAOTest {
         Person thirdPersonTest = new Person("theProphetID", "prophetUserName","Russel", "Nelson","m","nelsonDad","NelsonMom","Wendy");
 
         //insert all three users into database
-        ePerson.insert(testPerson); //from the set up method
+        dataAccessPerson.insert(testPerson); //from the set up method
 
-        ePerson.insert(secondTestPerson);
+        dataAccessPerson.insert(secondTestPerson);
 
-        ePerson.insert(thirdPersonTest);
+        dataAccessPerson.insert(thirdPersonTest);
 
-        Person firstCompareTest = ePerson.find(testPerson.getPersonID());
+        Person firstCompareTest = dataAccessPerson.find(testPerson.getPersonID());
         assertNotNull(firstCompareTest);
         assertEquals(testPerson, firstCompareTest);
 
-        Person secondCompareTest = ePerson.find(secondTestPerson.getPersonID());
+        Person secondCompareTest = dataAccessPerson.find(secondTestPerson.getPersonID());
         assertNotNull(secondCompareTest);
         assertEquals(secondTestPerson, secondCompareTest);
 
-        Person thirdCompareTest = ePerson.find(thirdPersonTest.getPersonID());
+        Person thirdCompareTest = dataAccessPerson.find(thirdPersonTest.getPersonID());
         assertNotNull(thirdCompareTest);
         assertEquals(thirdPersonTest, thirdCompareTest);
 
@@ -107,17 +107,17 @@ public class PersonDAOTest {
     @Test
     public void retrieveNullPersonFail()throws DataAccessException{
 
-        assertNull(ePerson.find("not real person"));
+        assertNull(dataAccessPerson.find("not real person"));
 
 
     }
 
     @Test
-    public void clearTableTest() throws DataAccessException, SQLException {
+    public void clearPersonTableTest() throws DataAccessException {
 
-        ePerson.insert(testPerson); //insert person object into the table
+        dataAccessPerson.insert(testPerson); //insert person object into the table
 
-        ePerson.clear(); //clear the table
+        dataAccessPerson.clear(); //clear the table
 
         Connection conn = null;
         Statement statement = null;
@@ -156,7 +156,80 @@ public class PersonDAOTest {
         }
     }
 
-    //can also just run find on who you inserted...
+    @Test
+    public void negativePersonClear() throws DataAccessException {
+
+        dataAccessPerson.insert(testPerson);
+
+        dataAccessPerson.clear();
+
+        assertNull(dataAccessPerson.find(testPerson.getPersonID()));
+        //we should get a null value when we try to find a user that is no longer in the database
+
+    }
+
+    @Test
+    public void findTruePerson() throws DataAccessException {
+
+        dataAccessPerson.insert(testPerson);
+
+        assertTrue(dataAccessPerson.findTrue(testPerson.getPersonID()));
+
+        //we should get a true boolean value when we call findTrue on someone in the DB
+    }
+
+    @Test
+    public void findFalsePerson() throws DataAccessException{
+
+        assertFalse(dataAccessPerson.findTrue("InvalidPersonID"));
+        //we should get a false boolean when we call findTrue for an invalid personID
+    }
+
+    @Test
+    public void deleteValidPersonData()throws DataAccessException{
+
+        dataAccessPerson.insert(testPerson);
+
+        dataAccessPerson.deleteUserData(testPerson.getAssociatedUsername());
+
+        assertNull(dataAccessPerson.find(testPerson.getPersonID()));
+
+        //we insert our test person into the DB, delete the data associated with the userName of this person and then
+        //we make sure that we get a null value when we go to look for this person
+    }
+
+    @Test
+    public void deleteInvalidPersonData()throws DataAccessException{
+        assertThrows(DataAccessException.class, () -> dataAccessPerson.deleteUserData(null));
+        //we make sure we throw an appropriate exception if we pass in a null username to delete data for
+    }
+
+    @Test
+    public void getAllPeoplePass() throws DataAccessException{
+
+        Person Kevin = new Person("123", "Cosmo", "Kevin", "Worthen", "m","111", "111","111");
+
+        Person Peggy = new Person("999", "Cosmo", "Peggy", "Worthen", "f", "999", "999","999");
+
+        dataAccessPerson.insert(Kevin);
+
+        dataAccessPerson.insert(Peggy);
+
+        assertEquals(2, dataAccessPerson.getAllPeopleWithUsername("Cosmo").length);
+
+        //we create 2 persons objects and then make sure that the length of the array we are getting back is of size 2
+
+
+    }
+
+    @Test
+    public void getAllPeopleInvalidUserName() throws DataAccessException {
+
+        assertEquals(0, dataAccessPerson.getAllPeopleWithUsername("Invalid User").length);
+        //we should get an array of size 0 if we give this function a username that doesn't exist in the DB
+    }
+
+
 
 
 

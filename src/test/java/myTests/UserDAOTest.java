@@ -25,7 +25,7 @@ public class UserDAOTest {
 
     private User myTestUser;
 
-    private UserDao user_dao;
+    private UserDao dataAccessUser;
 
     @BeforeEach
     public void setUp() throws DataAccessException {
@@ -39,9 +39,9 @@ public class UserDAOTest {
         // Here, we'll open the connection in preparation for the test case to use it
         Connection conn = db.getConnection();
         //Then we pass that connection to the EventDAO, so it can access the database.
-        user_dao = new UserDao(conn);
+        dataAccessUser = new UserDao(conn);
         //Let's clear the database as well so any lingering data doesn't affect our tests
-        user_dao.clear();
+        dataAccessUser.clear();
     }
 
     @AfterEach
@@ -56,9 +56,9 @@ public class UserDAOTest {
     @Test
     public void insertPass() throws DataAccessException {
         // Start by inserting an event into the database.
-        user_dao.insert(myTestUser);
+        dataAccessUser.insert(myTestUser);
         // Let's use a find method to get the event that we just put in back out.
-        User compareTest = user_dao.find((myTestUser.getPersonID()));
+        User compareTest = dataAccessUser.find((myTestUser.getPersonID()));
         // First lets see if our find method found anything at all. If it did then we know that we got
         // something back from our database.
         assertNotNull(compareTest);
@@ -71,45 +71,45 @@ public class UserDAOTest {
     }
 
     @Test
-    public void insertFail() throws DataAccessException{
+    public void insertFail() throws DataAccessException {
 
         //getting an exception when we try to insert twice (this is copied from the Events test example code that is given to us
 
-        user_dao.insert(myTestUser);
+        dataAccessUser.insert(myTestUser);
 
-        assertThrows(DataAccessException.class, () -> user_dao.insert(myTestUser));
+        assertThrows(DataAccessException.class, () -> dataAccessUser.insert(myTestUser));
 
     }
 
     @Test
-    public void insertAndFindThreeUsers() throws DataAccessException{ //insert 3 users into the db and then check to make sure there is exactly 3 users in the user table
+    public void insertAndFindThreeUsers() throws DataAccessException { //insert 3 users into the db and then check to make sure there is exactly 3 users in the user table
 
 
         //create 2 new users (We already have the first from the set up before all method
 
-        User secondTestUser = new User("ClaytonNation", "password_123","randomEmail@gmail.com","Clayton", "Young", "M", "1010");
+        User secondTestUser = new User("ClaytonNation", "password_123", "randomEmail@gmail.com", "Clayton", "Young", "M", "1010");
 
-        User thirdTestUser = new User("SuperGirl","superManPassword","super_girl@gmail.com","Kara", "Zor", "F", "1111");
+        User thirdTestUser = new User("SuperGirl", "superManPassword", "super_girl@gmail.com", "Kara", "Zor", "F", "1111");
 
         //Insert all 3 users
 
-        user_dao.insert(myTestUser); //already have this user from setup so we'll use them here as well
+        dataAccessUser.insert(myTestUser); //already have this user from setup so we'll use them here as well
 
-        user_dao.insert(secondTestUser);
+        dataAccessUser.insert(secondTestUser);
 
-        user_dao.insert(thirdTestUser);
+        dataAccessUser.insert(thirdTestUser);
 
         //make sure all of the users are in the database
 
-        User compareTest = user_dao.find((myTestUser.getPersonID())); //new user for comparison
+        User compareTest = dataAccessUser.find((myTestUser.getPersonID())); //new user for comparison
         assertNotNull(compareTest); // make sure we're not getting null back for this user
         assertEquals(myTestUser, compareTest); //make sure the first two users are the same
         //second user comparison
-        User secondCompareTest = user_dao.find(secondTestUser.getPersonID());
+        User secondCompareTest = dataAccessUser.find(secondTestUser.getPersonID());
         assertNotNull(secondCompareTest);
         assertEquals(secondTestUser, secondCompareTest);
         //third user comparison
-        User thirdCompareTest = user_dao.find(thirdTestUser.getPersonID());
+        User thirdCompareTest = dataAccessUser.find(thirdTestUser.getPersonID());
         assertNotNull(thirdCompareTest);
         assertEquals(thirdTestUser, thirdCompareTest);
 
@@ -117,18 +117,17 @@ public class UserDAOTest {
     }
 
 
-
     @Test
-    public void retrieveSameIDFail() throws DataAccessException{
+    public void retrieveSameIDFail() throws DataAccessException {
         // we'll try to insert 2 users with all different attributes but have the same personID
 
-        User firstTestUser = new User("ClaytonNation", "password_123","randomEmail@gmail.com","Clayton", "Young", "M", "1010");
+        User firstTestUser = new User("ClaytonNation", "password_123", "randomEmail@gmail.com", "Clayton", "Young", "M", "1010");
 
-        User SecondTestUser = new User("SuperGirl","superManPassword","super_girl@gmail.com","Kara", "Zor", "F", "1010");
+        User SecondTestUser = new User("SuperGirl", "superManPassword", "super_girl@gmail.com", "Kara", "Zor", "F", "1010");
 
-        user_dao.insert(firstTestUser); //normal insertion
+        dataAccessUser.insert(firstTestUser); //normal insertion
 
-        assertThrows(DataAccessException.class, () -> user_dao.insert(SecondTestUser)); //should get the data access error bc we then try to insert the second user that has the same personID
+        assertThrows(DataAccessException.class, () -> dataAccessUser.insert(SecondTestUser)); //should get the data access error bc we then try to insert the second user that has the same personID
 
         //you'll get some red errors about UNIQUE constraints failing on the personID but that is what we want for this test
     }
@@ -136,9 +135,9 @@ public class UserDAOTest {
     @Test
     public void clearTableTest() throws DataAccessException, SQLException {
 
-        user_dao.insert(myTestUser); //insert Event object into the table
+        dataAccessUser.insert(myTestUser); //insert Event object into the table
 
-        user_dao.clear(); //clear the table
+        dataAccessUser.clear(); //clear the table
 
         Connection conn = null;
         Statement statement = null;
@@ -177,6 +176,90 @@ public class UserDAOTest {
         }
     }
 
+    @Test
+    public void ClearUser() throws DataAccessException {
+
+        dataAccessUser.insert(myTestUser);
+
+        dataAccessUser.clear();
+
+        assertNull(dataAccessUser.findUser(myTestUser.getUsername()));
+
+        //we are making sure we are getting a null value when we look for a user in the db after it has been cleared
+
+    }
+
+    @Test
+    public void validCredentials() throws DataAccessException {
+
+        dataAccessUser.insert(myTestUser);
+
+        assertTrue(dataAccessUser.verifyCredentials("Zebulon", "Password123"));
+        //we should get a true value when we pass in the correct username and password for a user in the database
+    }
+
+    @Test
+    public void invalidCredentials() throws DataAccessException {
+
+        assertFalse(dataAccessUser.verifyCredentials("False username", "False password"));
+
+        //we should get a false boolean when we pass in an invalid password and username
+    }
+
+    @Test
+    public void findValidUserName() throws DataAccessException {
+
+        dataAccessUser.insert(myTestUser);
+
+        User matchingUser = dataAccessUser.findUser(myTestUser.getUsername());
+
+        assertEquals(matchingUser, myTestUser);
+
+        //we set a user to the user object we get back from passing in our test user from setup's username
+        //then we make sure the two users are equal
+    }
+
+    @Test
+    public void findInvalidUserName() throws DataAccessException {
+
+
+        assertEquals(null, dataAccessUser.findUser(myTestUser.getUsername()));
+        //we should get a null value if we look for a user that is not in the database
+    }
+
+    @Test
+    public void getValidUsername() throws DataAccessException {
+
+        dataAccessUser.insert(myTestUser);
+
+        assertEquals("Zebulon", dataAccessUser.findUsername(myTestUser.getUsername()));
+        //we get the correct string back when we give the username of a user
+    }
+
+    @Test
+    public void getInvalidUsername() throws DataAccessException {
+
+        assertNull(dataAccessUser.findUsername("InvalidUsername"));
+        //we get a null value when we try to find a username that does not exist in the database
+    }
+
+    @Test
+    public void getValidPersonID() throws DataAccessException {
+
+        dataAccessUser.insert(myTestUser);
+
+        assertEquals(myTestUser.getPersonID(), dataAccessUser.findPersonID(myTestUser.getUsername()));
+
+        //we should get back the correct personID when given the correctUsername
+    }
+
+    @Test
+    public void getInvalidPersonID() throws DataAccessException {
+
+        assertNull(dataAccessUser.findPersonID("InvalidInfo"));
+        //we should get a null value when we search for a personID with an invalid username
+
+    }
 
 
 //end of class
