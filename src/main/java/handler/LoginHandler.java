@@ -14,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.sql.SQLException;
 
 
-public class LoginHandler implements HttpHandler {
+public class LoginHandler extends HandlerBase implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
@@ -44,17 +44,12 @@ public class LoginHandler implements HttpHandler {
                 System.out.println(reqData);
 
 
-
-
                 LoginRequest request = (LoginRequest) gson.fromJson(reqData, LoginRequest.class); //turning json string into a request
 
                 LoginService service = new LoginService();
 
-               result = service.login(request); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
+                result = service.login(request); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
                 //if yes, then it will send back a result object with an Auth token
-
-
-
 
 
                 success = result.getSuccess();
@@ -70,7 +65,7 @@ public class LoginHandler implements HttpHandler {
                 // We are not sending a response body, so close the response body
                 // output stream, indicating that the response is complete.
 
-            }else{
+            } else {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 
 
@@ -104,29 +99,6 @@ public class LoginHandler implements HttpHandler {
 
 
     }
-
-    /*
-        The readString method shows how to read a String from an InputStream.
-    */
-    private String readString(InputStream is) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        InputStreamReader sr = new InputStreamReader(is);
-        char[] buf = new char[1024];
-        int len;
-        while ((len = sr.read(buf)) > 0) {
-            sb.append(buf, 0, len);
-        }
-        return sb.toString();
-    }
-
-    private void writeString(String str, OutputStream os) throws IOException {
-        OutputStreamWriter sw = new OutputStreamWriter(os);
-        sw.write(str);
-        sw.flush();
-    }
-
-    //good idea to put these two above functions in a shared class for all to use
-
 
     //end of class
 }
