@@ -16,7 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 
 
-public class EventHandler implements HttpHandler {
+public class EventHandler extends HandlerBase implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
@@ -56,20 +56,8 @@ public class EventHandler implements HttpHandler {
                     writeString(jSonResult, resBody);
                     resBody.close();
 
-                    success = true;
+
                 }
-            }
-
-            //can we just git rid of what is here?
-
-            if (!success) {
-                // The HTTP request was invalid somehow, so we return a "bad request"
-                // status code to the client.
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-
-                // We are not sending a response body, so close the response body
-                // output stream, indicating that the response is complete.
-                exchange.getResponseBody().close();
             }
 
         } catch (IOException e) {
@@ -93,27 +81,6 @@ public class EventHandler implements HttpHandler {
 
     }
 
-    /*
-        The readString method shows how to read a String from an InputStream.
-    */
-    private String readString(InputStream is) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        InputStreamReader sr = new InputStreamReader(is);
-        char[] buf = new char[1024];
-        int len;
-        while ((len = sr.read(buf)) > 0) {
-            sb.append(buf, 0, len);
-        }
-        return sb.toString();
-    }
-
-    private void writeString(String str, OutputStream os) throws IOException {
-        OutputStreamWriter sw = new OutputStreamWriter(os);
-        sw.write(str);
-        sw.flush();
-    }
-
-    //good idea to put these two above functions in a shared class for all to use
 
 
     //end of class

@@ -1,4 +1,4 @@
-package myTests;
+package daoTests;
 
 import dao.DataAccessException;
 import dao.Database;

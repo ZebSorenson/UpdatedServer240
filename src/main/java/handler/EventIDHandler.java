@@ -15,15 +15,12 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 
 
-public class EventIDHandler implements HttpHandler {
+public class EventIDHandler extends HandlerBase implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
         // exchange.getRequestURI().toString(); this will give the info from the URL
         //Split method on a String object and it will split the String into an array. Can give it / and seperate as needed
-
-
-
 
         boolean success = false;
 
@@ -53,12 +50,6 @@ public class EventIDHandler implements HttpHandler {
                     // Extract the auth token from the "Authorization" header
                     String authToken = reqHeaders.getFirst("Authorization");
 
-                    // Verify that the auth token is the one we're looking for
-                    // (this is not realistic, because clients will use different
-                    // auth tokens over time, not the same one all the time).
-                    // if (authToken.equals("afj232hj2332")) { // I don't need this correct?
-
-                    // Extract the JSON string from the HTTP request body
 
                     // Get the request body input stream
                     InputStream reqBody = exchange.getRequestBody();
@@ -94,21 +85,10 @@ public class EventIDHandler implements HttpHandler {
 
                     resBody.close();
 
-
-                    success = true;
-
                 }
             }
 
-            if (!success) {
-                // The HTTP request was invalid somehow, so we return a "bad request"
-                // status code to the client.
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
 
-                // We are not sending a response body, so close the response body
-                // output stream, indicating that the response is complete.
-                exchange.getResponseBody().close();
-            }
         }
         catch (IOException e) {
             // Some kind of internal error has occurred inside the server (not the
@@ -126,29 +106,6 @@ public class EventIDHandler implements HttpHandler {
 
 
     }
-
-    /*
-        The readString method shows how to read a String from an InputStream.
-    */
-    private String readString(InputStream is) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        InputStreamReader sr = new InputStreamReader(is);
-        char[] buf = new char[1024];
-        int len;
-        while ((len = sr.read(buf)) > 0) {
-            sb.append(buf, 0, len);
-        }
-        return sb.toString();
-    }
-
-    private void writeString(String str, OutputStream os) throws IOException {
-        OutputStreamWriter sw = new OutputStreamWriter(os);
-        sw.write(str);
-        sw.flush();
-    }
-
-    //good idea to put these two above functions in a shared class for all to use
-
 
 
     //end of class
