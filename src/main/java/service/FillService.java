@@ -47,7 +47,15 @@ public class FillService {
     public FillResult fill(String username, Integer generations) throws DataAccessException, SQLException, FileNotFoundException {
 
 
+
+
         FillResult result = new FillResult();
+
+        if(generations<0){
+            result.setSuccess(false);
+            result.setMessage("Invalid number of generations.");
+            return result;
+        }
 
         //put this into a Try block
         Database db = new Database();

@@ -26,17 +26,7 @@ public class RegisterHandler extends HandlerBase implements HttpHandler {
                 // Get the HTTP request headers
                 Headers reqHeaders = exchange.getRequestHeaders();
                 // Check to see if an "Authorization" header is present
-                //if (reqHeaders.containsKey("Authorization")) { // what does this mean?
 
-                // Extract the auth token from the "Authorization" header
-                // String authToken = reqHeaders.getFirst("Authorization");
-
-                // Verify that the auth token is the one we're looking for
-                // (this is not realistic, because clients will use different
-                // auth tokens over time, not the same one all the time).
-                // if (authToken.equals("afj232hj2332")) { // I don't need this correct?
-
-                // Extract the JSON string from the HTTP request body
 
                 // Get the request body input stream
                 InputStream reqBody = exchange.getRequestBody();
