@@ -18,6 +18,7 @@ public class PersonService {
 
     /**
      * Returns ALL family members of the current user. The current user is determined by the provided authtoken.
+     *
      * @param token used to determine which user to return all persons related to the user with this auth token
      * @return PersonResult object containing info on whether or not the service was successful
      */
@@ -44,9 +45,7 @@ public class PersonService {
                 result.setSuccess(false);
                 result.setMessage("Error while looking for authtoken");
                 return result;
-            }
-
-            else {
+            } else {
                 PersonResult result = new PersonResult();
                 result.setData(personDataAccess.getAllPeopleWithUsername(myAuth.getUsername()));
                 result.setSuccess(true);
@@ -55,7 +54,7 @@ public class PersonService {
             }
 
 
-        } catch(DataAccessException e){
+        } catch (DataAccessException e) {
             {
                 db.closeConnection(false);
                 PersonResult result = new PersonResult();
@@ -69,9 +68,7 @@ public class PersonService {
     }
 
 
-
     //end of class
 }
 
 
-//Returns ALL family members of the current user. The current user is determined by the provided authtoken.

@@ -22,7 +22,6 @@ public class LoadHandler extends HandlerBase implements HttpHandler {
         //Split method on a String object and it will split the String into an array. Can give it / and seperate as needed
 
 
-
         boolean success = false;
 
         try {
@@ -32,53 +31,49 @@ public class LoadHandler extends HandlerBase implements HttpHandler {
                 // Get the HTTP request headers
                 Headers reqHeaders = exchange.getRequestHeaders();
 
-                    // Get the request body input stream
-                    InputStream reqBody = exchange.getRequestBody();
+                // Get the request body input stream
+                InputStream reqBody = exchange.getRequestBody();
 
-                    // Read JSON string from the input stream
-                    String reqData = readString(reqBody);
-
-
-                    // Display/log the request JSON data
-                    //System.out.println(reqData);
-
-                    Gson gson = new Gson();
-                    System.out.println("Making request");
-                    LoadRequest request = (LoadRequest)gson.fromJson(reqData, LoadRequest.class); //turning json string into a request
-
-                    LoadService service = new LoadService();
-
-                    System.out.println("Entering the service function");
+                // Read JSON string from the input stream
+                String reqData = readString(reqBody);
 
 
-                    LoadResult result = service.load(request); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
-                    //if yes, then it will send back a result object with an Auth token
+                // Display/log the request JSON data
+                //System.out.println(reqData);
 
-                    if(result.getSuccess()==true){
-                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                        success = true;
-                    }else{
-                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-                    }
+                Gson gson = new Gson();
+                System.out.println("Making request");
+                LoadRequest request = (LoadRequest) gson.fromJson(reqData, LoadRequest.class); //turning json string into a request
 
-                    // service.login(request);
+                LoadService service = new LoadService();
 
+                System.out.println("Entering the service function");
 
 
-                    OutputStream resBody = exchange.getResponseBody();
+                LoadResult result = service.load(request); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
+                //if yes, then it will send back a result object with an Auth token
 
-                    String jSonResult = gson.toJson(result); //may need response body? should work without but just in case.
+                if (result.getSuccess() == true) {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                    success = true;
+                } else {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                }
 
-                    writeString(jSonResult, resBody);
 
-                    resBody.close();
+                OutputStream resBody = exchange.getResponseBody();
 
-                    exchange.getResponseBody().close();
+                String jSonResult = gson.toJson(result); //may need response body? should work without but just in case.
+
+                writeString(jSonResult, resBody);
+
+                resBody.close();
+
+                exchange.getResponseBody().close();
 
 
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // Some kind of internal error has occurred inside the server (not the
             // client's fault), so we return an "internal server error" status code
             // to the client.

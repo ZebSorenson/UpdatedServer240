@@ -30,14 +30,13 @@ public class EventIDHandler extends HandlerBase implements HttpHandler {
             URI uri = exchange.getRequestURI();
             String uriString = uri.toString();
 
-// split the URI into its constituent parts
+            // split the URI into its constituent parts
             String[] parts = uriString.split("/");
 
-// extract the person ID from the URI
+            // extract the person ID from the URI
             String eventID = parts[2];
 
-// extract the "person" part of the URI
-
+            // extract the "person" part of the URI
 
 
             if (exchange.getRequestMethod().equalsIgnoreCase("get")) {
@@ -75,7 +74,7 @@ public class EventIDHandler extends HandlerBase implements HttpHandler {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                     }
 
-                   // exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                    // exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 
                     OutputStream resBody = exchange.getResponseBody();
 
@@ -89,8 +88,7 @@ public class EventIDHandler extends HandlerBase implements HttpHandler {
             }
 
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // Some kind of internal error has occurred inside the server (not the
             // client's fault), so we return an "internal server error" status code
             // to the client.

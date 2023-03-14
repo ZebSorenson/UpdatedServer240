@@ -15,9 +15,6 @@ import java.util.UUID;
 //in the register service, create the database connection and then pass it into this class
 
 
-
-
-
 public class TreeGenerator {
 
     private final int currYear = 2023;
@@ -34,7 +31,6 @@ public class TreeGenerator {
     private User rootUser = null;
 
 
-
     public TreeGenerator(Connection conn, String userName) {
 
         this.myConnection = conn;
@@ -42,7 +38,7 @@ public class TreeGenerator {
 
     }
 
-    Person generatePersonTree(String gender, int generations, int year) throws DataAccessException, FileNotFoundException, SQLException {
+    public Person generatePersonTree(String gender, int generations, int year) throws DataAccessException, FileNotFoundException, SQLException {
 
         //should this be in a try catch block because it deals with the database?
 
@@ -54,7 +50,7 @@ public class TreeGenerator {
 
         //User rootUser = userDataAccess.findUser(userName); //used to check if we already have this user in the database, possibly put this back!!
 
-         rootUser = userDataAccess.findUser(userName); //this is a class variable now
+        rootUser = userDataAccess.findUser(userName); //this is a class variable now
 
         eventDataAccess.insert(generateUserBirthEvent(rootUser)); //create the root user's birth event and insert it into the database
 
@@ -63,11 +59,11 @@ public class TreeGenerator {
 
         Boolean duplicate = personDataAccess.findTrue(rootUser.getPersonID());
 
-        if(!duplicate){
+        if (!duplicate) {
             basePerson = makePerson(rootUser); //if the user is not already in the database, we create the base person with the username
             System.out.println("new user");
-        }else{
-            basePerson=personDataAccess.find(rootUser.getPersonID());
+        } else {
+            basePerson = personDataAccess.find(rootUser.getPersonID());
             System.out.println("Duplicate");
         }
 
@@ -88,11 +84,10 @@ public class TreeGenerator {
         //possible add a new database and connection. Open and close before doing anything
 
 
-
         return basePerson;
     }
 
-    private Event generateMarriageEvent( String personID, int yearParam) throws FileNotFoundException {
+    private Event generateMarriageEvent(String personID, int yearParam) throws FileNotFoundException {
 
         LocationsGenerator locs = new LocationsGenerator();
 
@@ -108,7 +103,7 @@ public class TreeGenerator {
 
         int year = yearParam;
 
-        Event marriageEvent = new Event(UUID.randomUUID().toString(),userName,personID,latitude,longitude,country,city,eventType, year);
+        Event marriageEvent = new Event(UUID.randomUUID().toString(), userName, personID, latitude, longitude, country, city, eventType, year);
 
         return marriageEvent;
 
@@ -125,7 +120,7 @@ public class TreeGenerator {
 
         Random randomFirstName = new Random();
 
-        int randomNameIndex = randomFirstName.nextInt(max+1); //arrays start at 0 in Java, right?
+        int randomNameIndex = randomFirstName.nextInt(max + 1); //arrays start at 0 in Java, right?
 
         father.setFirstName(maleNames.getMaleNameArray().get(randomNameIndex));
         //last name
@@ -136,7 +131,7 @@ public class TreeGenerator {
 
         Random randomLastName = new Random();
 
-        int randomLastNameIndex = randomLastName.nextInt( maxLastName+1);
+        int randomLastNameIndex = randomLastName.nextInt(maxLastName + 1);
 
         father.setLastName(lastNames.getSireNameList().get(randomNameIndex));
 
@@ -150,18 +145,16 @@ public class TreeGenerator {
 
         Random randomFirstName = new Random();
 
-        int randomFirstNameIndex = randomFirstName.nextInt(max+1);
+        int randomFirstNameIndex = randomFirstName.nextInt(max + 1);
 
         mother.setFirstName(femaleNames.getFemaleNameList().get(randomFirstNameIndex));
 
 
-
-
     }
 
-    private Person makePerson(User user){
+    private Person makePerson(User user) {
 
-        Person newPerson = new Person(user.getPersonID(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getGender(),null, null, null);
+        Person newPerson = new Person(user.getPersonID(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getGender(), null, null, null);
 
         numPeople++;
         return newPerson;
@@ -175,11 +168,10 @@ public class TreeGenerator {
         Person father = null;
 
 
+        if (currentGeneration > 0) {
 
-        if(currentGeneration>0){
-
-            mother = new Person(UUID.randomUUID().toString(),currPerson.getAssociatedUsername(),null, null, "f", null, null, null);
-            father = new Person (UUID.randomUUID().toString(), currPerson.getAssociatedUsername(), null, null, "m", null, null, null);
+            mother = new Person(UUID.randomUUID().toString(), currPerson.getAssociatedUsername(), null, null, "f", null, null, null);
+            father = new Person(UUID.randomUUID().toString(), currPerson.getAssociatedUsername(), null, null, "m", null, null, null);
 
             setMaleRandomName(father);
 
@@ -197,15 +189,15 @@ public class TreeGenerator {
             currPerson.setMotherID(mother.getPersonID());
 
             //create the events for the people...This is where you will call your make event functions for mom and dad...
-            Event fatherMarriageEvent = generateMarriageEvent(father.getPersonID(),year-25);
-            Event motherMarriageEvent = new Event(UUID.randomUUID().toString(), userName, mother.getPersonID(), fatherMarriageEvent.getLatitude(),fatherMarriageEvent.getLongitude(), fatherMarriageEvent.getCountry(),fatherMarriageEvent.getCity(),"Marriage",year-25);
+            Event fatherMarriageEvent = generateMarriageEvent(father.getPersonID(), year - 25);
+            Event motherMarriageEvent = new Event(UUID.randomUUID().toString(), userName, mother.getPersonID(), fatherMarriageEvent.getLatitude(), fatherMarriageEvent.getLongitude(), fatherMarriageEvent.getCountry(), fatherMarriageEvent.getCity(), "Marriage", year - 25);
 
-            createParents(mother, currentGeneration-1, personDataAccess, eventDataAccess, year -25);
+            createParents(mother, currentGeneration - 1, personDataAccess, eventDataAccess, year - 25);
 
-            createParents(father, currentGeneration-1, personDataAccess, eventDataAccess, year-25);
+            createParents(father, currentGeneration - 1, personDataAccess, eventDataAccess, year - 25);
 
             personDataAccess.insert(mother);
-         // put all of service in a try
+            // put all of service in a try
 
             personDataAccess.insert(father);
 
@@ -215,12 +207,12 @@ public class TreeGenerator {
             eventDataAccess.insert(motherMarriageEvent);
             numEvents++;
 
-            Event fatherBirth =generateParentBirthEvent(father.getPersonID(), year-50);
-            Event motherEvent =generateParentBirthEvent(mother.getPersonID(), year-50);
+            Event fatherBirth = generateParentBirthEvent(father.getPersonID(), year - 50);
+            Event motherEvent = generateParentBirthEvent(mother.getPersonID(), year - 50);
 
-            Event fatherDeath = generateParentDeath(father.getPersonID(), year-5);
+            Event fatherDeath = generateParentDeath(father.getPersonID(), year - 5);
 
-            Event motherDeath = generateParentDeath(mother.getPersonID(), year-5);
+            Event motherDeath = generateParentDeath(mother.getPersonID(), year - 5);
 
 
             eventDataAccess.insert(fatherBirth);
@@ -233,16 +225,11 @@ public class TreeGenerator {
             eventDataAccess.insert(motherDeath);
             numEvents++;
 
-            numPeople+=2;
+            numPeople += 2;
 
         }
 
         //create birth and death for parents
-
-
-
-
-
 
 
         return new Person[]{mother, father};
@@ -264,8 +251,7 @@ public class TreeGenerator {
         String city = locs.getLocationList().get(randomLocationIndex).getCity();
 
 
-
-        Event birthEvent = new Event(UUID.randomUUID().toString(),user.getUsername(),user.getPersonID(), latitude,longitude,country,city,"Birth",currYear-20);
+        Event birthEvent = new Event(UUID.randomUUID().toString(), user.getUsername(), user.getPersonID(), latitude, longitude, country, city, "Birth", currYear - 20);
         numEvents++;
 
         return birthEvent;
@@ -286,9 +272,9 @@ public class TreeGenerator {
         String city = locs.getLocationList().get(randomLocationIndex).getCity();
 
 
-        Event parentBirthEvent = new Event(UUID.randomUUID().toString(), userName, personID, latitude,longitude,country,city,"birth", year);
+        Event parentBirthEvent = new Event(UUID.randomUUID().toString(), userName, personID, latitude, longitude, country, city, "birth", year);
 
-        return  parentBirthEvent;
+        return parentBirthEvent;
 
     }
 
@@ -307,35 +293,22 @@ public class TreeGenerator {
         String city = locs.getLocationList().get(randomLocationIndex).getCity();
 
 
-        Event parentDeathEvent = new Event(UUID.randomUUID().toString(), userName, personID, latitude,longitude,country,city,"death", year);
+        Event parentDeathEvent = new Event(UUID.randomUUID().toString(), userName, personID, latitude, longitude, country, city, "death", year);
 
-        return  parentDeathEvent;
+        return parentDeathEvent;
 
     }
 
-    public int getNumEvents(){
+    public int getNumEvents() {
         return numEvents;
     }
 
-    public int getNumPeople(){
+    public int getNumPeople() {
         return numPeople;
     }
 
 
-//need to have base case of if the father/mother is null, we have reached the end.
+//we have reached the end.
 }
 
-//function that makes a birth and a death
-//other that makes marriage, birth and death
-//make a function called make events...make a marriage event, make birth, make death...
-
-//have the second create event function take in an event and then set the new person to the marriage event.
-
-//then call make events every time in cr
-
-
-//possible move this stuff into the fill service and the register in
-
-
-//should make everything 25 years apart to keep things easy. This will help to avoid weird event data
 

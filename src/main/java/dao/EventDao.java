@@ -100,10 +100,6 @@ public class EventDao {
         }
     }
 
-
-
-
-
     public void deleteUserData(String userName) throws DataAccessException {
 
         if(userName==null){

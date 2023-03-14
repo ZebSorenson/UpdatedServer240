@@ -50,7 +50,6 @@ public class Server {
         System.out.println("Initializing HTTP Server");
 
 
-
         try {
             // Create a new HttpServer object.
             // Rather than calling "new" directly, we instead create
@@ -59,8 +58,7 @@ public class Server {
             server = HttpServer.create(
                     new InetSocketAddress(Integer.parseInt(portNumber)),
                     MAX_WAITING_CONNECTIONS);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return;
         }
@@ -98,25 +96,6 @@ public class Server {
         server.createContext("/event", new EventHandler());
 
 
-
-
-
-
-        // Create and install the "default" (or "file") HTTP handler.
-        // All requests that do not match the other handler URLs
-        // will be passed to this handle.
-        // These are requests to download a file from the server
-        // (e.g., web site files)
-
-
-
-
-
-
-        // Log message indicating that the HttpServer is about the start accepting
-        // incoming client connections.
-
-
         System.out.println("Starting server");
 
         // Tells the HttpServer to start accepting incoming client connections.
@@ -136,28 +115,8 @@ public class Server {
     // on which the server should accept incoming client connections.
     public static void main(String[] args) throws FileNotFoundException {
         String portNumber = args[0];
-        System.out.println("Starting server on port "+portNumber);
+        System.out.println("Starting server on port " + portNumber);
         new Server().run(portNumber);
-
-
-//        femaleNameGenerator names = new femaleNameGenerator();
-//
-//        names.getFemaleNameList();
-
-//        LocationsGenerator locs = new LocationsGenerator();
-//
-//
-//
-//        locs.getLocationList();
-//
-//        for(Location location: locs.getLocationList()){
-//            System.out.println(location.getCity());
-//            System.out.println(location.getLatitude());
-//        }
-
-
-
-
 
     }
 }

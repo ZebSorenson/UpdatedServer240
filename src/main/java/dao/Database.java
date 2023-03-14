@@ -91,8 +91,3 @@ public class Database {
 
 }
 
-//handlers create the request object based on the http methods
-
-//service classes will perform the actual action by calling the DAO's to perform the actual work.
-
-//THIS IS THE NEW PROJECT

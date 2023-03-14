@@ -12,22 +12,10 @@ import java.util.ArrayList;
 public class LocationsGenerator {
 
 
-
-
-
-//    public LocationGenerator() throws FileNotFoundException {
-//
-//        Reader reader = new FileReader("locations.json");
-//
-//        Gson gson = new Gson();
-//
-//        LocationData locData = (LocationData) gson.fromJson(reader, LocationData.class);
-//    }
-
-    public ArrayList<Location> getLocationList() throws FileNotFoundException{
+    public ArrayList<Location> getLocationList() throws FileNotFoundException {
 
         ArrayList<Location> listOfLocationObjects = new ArrayList<>();
-        try{
+        try {
 
             Reader reader = new FileReader("json/locations.json");
 
@@ -36,8 +24,7 @@ public class LocationsGenerator {
             LocationData locData = (LocationData) gson.fromJson(reader, LocationData.class); //is this filling the array with location objects?
 
 
-
-            for(Location locObject: locData.getData()){
+            for (Location locObject : locData.getData()) {
 
                 listOfLocationObjects.add(locObject);
 

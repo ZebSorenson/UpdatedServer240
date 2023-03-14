@@ -19,13 +19,9 @@ import java.sql.SQLException;
 public class FillHandler extends HandlerBase implements HttpHandler {
 
     final int defaultGeneration = 4; //default number of generations if not specified by the user.
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-
-        // exchange.getRequestURI().toString(); this will give the info from the URL
-        //Split method on a String object and it will split the String into an array. Can give it / and seperate as needed
-
-        //STILL NEED DAO TO HANDLE CHECKING IF THERE IS DATA CONNECTED TO THE USER. PROBABLY DO THIS IN THE SERVICE CLASS.
 
         String userName = null;
         Integer numGeneration = null;
@@ -33,18 +29,17 @@ public class FillHandler extends HandlerBase implements HttpHandler {
         String requestUri = exchange.getRequestURI().toString();
         String[] parts = requestUri.split("/");
         if (parts.length == 3 && parts[1].equals("fill")) {
-             userName = parts[2];
-             System.out.println(userName);
+            userName = parts[2];
+            System.out.println(userName);
             // set name in exchange object
         } else if (parts.length == 4 && parts[1].equals("fill")) {
-             userName = parts[2];
-              numGeneration = Integer.parseInt(parts[3]);
-             System.out.println(numGeneration + " Generations:"+ " Username, "+userName);
+            userName = parts[2];
+            numGeneration = Integer.parseInt(parts[3]);
+            System.out.println(numGeneration + " Generations:" + " Username, " + userName);
             // set name and username in exchange object
         } else {
             // invalid URL pattern
         }
-
 
 
         boolean success = false;
@@ -54,40 +49,38 @@ public class FillHandler extends HandlerBase implements HttpHandler {
             if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
 
 
-                 Gson gson = new Gson();
-                 FillResult result = new FillResult();
+                Gson gson = new Gson();
+                FillResult result = new FillResult();
 
 
+                FillService service = new FillService(userName); //create the new Fill service object and give it the username for the person we are filling.
+                //note, this is just a string, not an actual user. We'll need to use the Dao classes to actually get the user
 
-                    FillService service = new FillService(userName); //create the new Fill service object and give it the username for the person we are filling.
-                    //note, this is just a string, not an actual user. We'll need to use the Dao classes to actually get the user
-
-                    if(parts.length==4){
-                         result = service.fill(userName, numGeneration); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
-                        //if yes, then it will send back a result object with an Auth token
-
-
-                    }else if(parts.length==3){
-                        result = service.fill(userName, defaultGeneration); // this is the default number of generations
-                    }
+                if (parts.length == 4) {
+                    result = service.fill(userName, numGeneration); // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
+                    //if yes, then it will send back a result object with an Auth token
 
 
-                    // service.login(request);
+                } else if (parts.length == 3) {
+                    result = service.fill(userName, defaultGeneration); // this is the default number of generations
+                }
 
-                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 
-                    OutputStream resBody = exchange.getResponseBody();
+                // service.login(request);
 
-                    String jSonResult = gson.toJson(result); //may need response body? should work without but just in case.
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 
-                    writeString(jSonResult, resBody);
+                OutputStream resBody = exchange.getResponseBody();
 
-                    resBody.close();
+                String jSonResult = gson.toJson(result); //may need response body? should work without but just in case.
+
+                writeString(jSonResult, resBody);
+
+                resBody.close();
 
             }
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // Some kind of internal error has occurred inside the server (not the
             // client's fault), so we return an "internal server error" status code
             // to the client.

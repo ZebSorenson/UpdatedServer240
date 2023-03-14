@@ -21,6 +21,7 @@ public class LoadService {
 
     /**
      * Loads the user, person, and event data from the request body into the database.
+     *
      * @param loadReq the request object containing info for the service to perform function on
      * @return LoadResult object containing info on whether on not the service was successful
      */
@@ -37,11 +38,11 @@ public class LoadService {
 
         int numUsers = 0;
 
-        int numPeople =0;
+        int numPeople = 0;
 
         int numEvents = 0;
 
-        try{
+        try {
 
             System.out.println("Entering the try block");
 
@@ -58,7 +59,7 @@ public class LoadService {
             userDataAccessDao.clear();
 
 
-            for(User user: loadReq.getUsers() ){
+            for (User user : loadReq.getUsers()) {
                 userDataAccessDao.insert(user);
                 Authtoken authtoken = new Authtoken(UUID.randomUUID().toString(), user.getUsername());
                 dataAccessAUTHDao.insert(authtoken);
@@ -66,24 +67,23 @@ public class LoadService {
 
             }
 
-            for(Person person: loadReq.getPersons()){
+            for (Person person : loadReq.getPersons()) {
                 personDataAccessDao.insert(person);
                 numPeople++;
             }
 
-            for(Event event: loadReq.getEvents()){
+            for (Event event : loadReq.getEvents()) {
                 dataAccessEventDao.insert(event);
                 numEvents++;
             }
 
 
-
             result.setSuccess(true);
-            result.setMessage("Successfully added " + numUsers+ " users, "+ numPeople+" persons, and " + numEvents+" events to the database.");
+            result.setMessage("Successfully added " + numUsers + " users, " + numPeople + " persons, and " + numEvents + " events to the database.");
             System.out.println("you have arrived at the end of the try block");
             db.closeConnection(true);
 
-        }  catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             result.setMessage("A DataAccess exception was caught while attempting to clear");
             result.setSuccess(false);
             db.closeConnection(false);
@@ -92,13 +92,11 @@ public class LoadService {
 
         }
 
-
         return result;
 
     }
 
 }
-
 
 
 //    Clears all data from the database (just like the /clear API)

@@ -40,7 +40,7 @@ public class RegisterHandler extends HandlerBase implements HttpHandler {
 
                 Gson gson = new Gson();
 
-                RegisterRequest request = (RegisterRequest)gson.fromJson(reqData, RegisterRequest.class); //turning json string into a request
+                RegisterRequest request = (RegisterRequest) gson.fromJson(reqData, RegisterRequest.class); //turning json string into a request
 
                 RegisterService service = new RegisterService();
 
@@ -67,8 +67,7 @@ public class RegisterHandler extends HandlerBase implements HttpHandler {
             }
 
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // Some kind of internal error has occurred inside the server (not the
             // client's fault), so we return an "internal server error" status code
             // to the client.
@@ -86,7 +85,6 @@ public class RegisterHandler extends HandlerBase implements HttpHandler {
 
 
     }
-
 
 
     //end of class

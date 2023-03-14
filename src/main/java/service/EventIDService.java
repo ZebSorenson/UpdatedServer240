@@ -17,17 +17,17 @@ public class EventIDService {
 
     /**
      * Will return specific single event based on the specified ID
+     *
      * @param eventIDString used to determine which user to perform function with
      * @return an eventIDResult object containing the event data if the service is successful and error info if not
      */
 
-    public EventIDResult GetSingleEventID(String eventIDString, String authToken){
+    public EventIDResult GetSingleEventID(String eventIDString, String authToken) {
 
         System.out.println("You have entered the eventID service function");
 
-        //MAKE SURE TO CHECK THE AUTH TOKEN!!!
 
-        try{
+        try {
             Database db = new Database();
             Connection conn = db.getConnection();
             EventDao eventDataAccess = new EventDao(conn);
@@ -36,17 +36,13 @@ public class EventIDService {
 
             AuthtokenDao authDataAccess = new AuthtokenDao(conn);
 
-            if(!authDataAccess.isValidAuth(eventToFind.getAssociatedUsername(),authToken) || eventToFind==null ){
+            if (!authDataAccess.isValidAuth(eventToFind.getAssociatedUsername(), authToken) || eventToFind == null) {
                 EventIDResult result = new EventIDResult();
                 result.setSuccess(false);
                 result.setMessage("Error: Invalid authToken");
                 db.closeConnection(false);
                 return result;
-            }
-
-
-
-            else if(eventToFind!=null){
+            } else if (eventToFind != null) {
 
                 EventIDResult result = new EventIDResult();
 
@@ -75,7 +71,6 @@ public class EventIDService {
             return result;
 
         }
-
 
 
         return null;

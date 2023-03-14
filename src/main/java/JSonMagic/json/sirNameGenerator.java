@@ -15,21 +15,20 @@ public class sirNameGenerator {
 
 
     public ArrayList<String> getSireNameList() throws FileNotFoundException {
-        try{
+        try {
             Reader reader = new FileReader("json/snames.json");
 
             Gson gson = new Gson();
 
-            sirNameData snameList = (sirNameData) gson.fromJson(reader, sirNameData.class); //is this filling the array with location objects?
+            sirNameData snameList = (sirNameData) gson.fromJson(reader, sirNameData.class);
 
 
-            for(String sname: snameList.getData()){
+            for (String sname : snameList.getData()) {
 
                 sirNameArray.add(sname);
 
             }
 
-          //  System.out.println(sirNameArray);
 
             return sirNameArray;
 

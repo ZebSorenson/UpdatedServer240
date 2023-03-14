@@ -27,41 +27,13 @@ public class LoginService {
 
     Connection loginConnection = null;
 
-//    public LoginService(Connection conn) {
-//        this.loginConnection =conn;
-//    }
-
-
-//create database object here!!!
-    //using the databse you'll create DAOs to interact with the objectsa
-    //this is because thhe constructor of the DAO takes a connection object. So create instance here.
-    //DAO can't do anything with DB connection.
-
-
-
-    /**
-     *
-     * @param loginReq request object containing info for the service to perform function on
-     * @return loginResult object containing info on whether or not the service was succesfull
-     * @throws DataAccessException
-     */
-
 
     public LoginResult login(LoginRequest loginReq) throws DataAccessException, SQLException {
 
-        //may need to handle something that is not formated correctly
-        //am I handling the connection correctly??? With commits and rollbacks?
-
-
 
         LoginResult returnResult = new LoginResult();
-
-
-
-
         String userName = loginReq.getUsername();
         String passWord = loginReq.getPassword();
-
         boolean successLogin = false;
 
         try {

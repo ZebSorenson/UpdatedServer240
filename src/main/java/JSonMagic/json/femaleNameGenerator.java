@@ -15,24 +15,20 @@ public class femaleNameGenerator {
 
 
     public ArrayList<String> getFemaleNameList() throws FileNotFoundException {
-        try{
+        try {
             Reader reader = new FileReader("json/fnames.json");
 
             Gson gson = new Gson();
 
             femaleNameData fnameList = (femaleNameData) gson.fromJson(reader, femaleNameData.class); //is this filling the array with location objects?
 
-//            System.out.println(fnameList);
-//
-//            return fnameList;
 
-            for(String fname: fnameList.getData()){
+            for (String fname : fnameList.getData()) {
 
                 femaleNameListArray.add(fname);
 
             }
 
-           // System.out.println(femaleNameListArray);
 
             return femaleNameListArray;
 

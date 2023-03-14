@@ -19,29 +19,18 @@ public class PersonIDService {
 
     /**
      * Returns the single Person object with the specified ID (if the person is associated with the current user). The current user is determined by the provided authtoken.
+     *
      * @param personIDString the ID to identify the person to perform function on
      * @return PersonResult object containing info on whether or not the service was successful
      */
 
     public PersonIDResult RetrievePersonID(String personIDString, String authToken) throws DataAccessException {
 
-        System.out.println("you have arrived in the PersonID service");
-        System.out.println("The personID given is "+ personIDString);
-
-        //just need to use the dao to get the person object with this ID, verify that it belongs to the user with the
-        //given authtoken and fill in the result object
-
-        //HOW DO WE DEAL WITH THE AUTHTOKEN??
-
-        //use your finds to find the username connect to the authtoken and the personID string and then double
-        //check to make sure they are conneceted to the same things.
-
-        //the authtoken is not connected to the user that is the associated username of the person
 
         Database db = new Database();
         Connection conn = db.getConnection();
 
-        try{
+        try {
 
             PersonDao personDataAccess = new PersonDao(conn);
 
@@ -50,7 +39,7 @@ public class PersonIDService {
             AuthtokenDao authTokenDataAccess = new AuthtokenDao(conn);
             Authtoken myAuthToken = authTokenDataAccess.findAuthToken(authToken);
 
-            if(personToFind==null){
+            if (personToFind == null) {
                 PersonIDResult result = new PersonIDResult();
                 result.setMessage("Error: Person doesn't exist");
                 result.setSuccess(false);
@@ -58,7 +47,7 @@ public class PersonIDService {
                 return result;
             }
 
-            if(myAuthToken==null){
+            if (myAuthToken == null) {
                 PersonIDResult result = new PersonIDResult();
                 result.setMessage("Error: bad authtoken");
                 result.setSuccess(false);
@@ -66,7 +55,7 @@ public class PersonIDService {
                 return result;
             }
 
-            if(personToFind.getAssociatedUsername().equals(myAuthToken.getUsername())){
+            if (personToFind.getAssociatedUsername().equals(myAuthToken.getUsername())) {
 
                 PersonIDResult result = new PersonIDResult();
                 result.setAssociatedUsername(personToFind.getAssociatedUsername());
@@ -82,7 +71,7 @@ public class PersonIDService {
                 return result;
 
 
-            }else{
+            } else {
                 PersonIDResult result = new PersonIDResult();
                 result.setMessage("Error: Invalid user or AuthToken");
                 result.setSuccess(false);
@@ -107,5 +96,3 @@ public class PersonIDService {
 
 }
 
-//    Returns the single Person object with the specified ID
-//        (if the person is associated with the current user). The current user is determined by the provided authtoken.

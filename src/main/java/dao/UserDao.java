@@ -6,7 +6,6 @@ import model.User;
 import java.sql.*;
 
 
-
 /**
  * User DAO for accessing user data in the database
  */
@@ -19,21 +18,20 @@ public class UserDao {
 
     private final Connection conn;
 
-    public UserDao(Connection conn) {this.conn = conn;
+    public UserDao(Connection conn) {
+        this.conn = conn;
     }
 
     //pass in and recieve model objects back in return
 
 
-
-
-
     /**
      * will insert a new user into the database
+     *
      * @param user new user to be inserted into the database
      */
 
-    public void insert(User user) throws DataAccessException{
+    public void insert(User user) throws DataAccessException {
 
         String sql = "INSERT INTO User (username, password, email, firstName, lastName, gender, personID) VALUES(?,?,?,?,?,?,?)";
 
@@ -61,10 +59,11 @@ public class UserDao {
 
     /**
      * Will return a specific user from the database
+     *
      * @param personID a unique ID associated with the user in order to find it in the database
      * @return the user associated with the specified ID from the parameter
      */
-    public User find(String personID ) throws DataAccessException {
+    public User find(String personID) throws DataAccessException {
 
         User user;
         ResultSet rs;
@@ -88,7 +87,7 @@ public class UserDao {
     }
 
 
-    public User findUser(String userName ) throws DataAccessException {
+    public User findUser(String userName) throws DataAccessException {
 
         User user;
         ResultSet rs;
@@ -113,6 +112,7 @@ public class UserDao {
 
     /**
      * Used to determine if the given username exists in the database
+     *
      * @param userName username we want to determine exists or not in the database
      * @return String of username we were looking for
      * @throws DataAccessException
@@ -143,6 +143,7 @@ public class UserDao {
 
     /**
      * Used to find personID given a username
+     *
      * @param userName username of user we want the ID for
      * @return String of personID connected to user we are concerned with
      * @throws DataAccessException
@@ -171,12 +172,12 @@ public class UserDao {
 
     /**
      * verifies that the given username and password are connected to one another
+     *
      * @param username username we want to validate the password for
      * @param password password to check if connects to given username
      * @return true or false based on whether or not given usenrame and password relate
      * @throws DataAccessException
      */
-
 
 
     public boolean verifyCredentials(String username, String password) throws DataAccessException {
@@ -201,7 +202,6 @@ public class UserDao {
 
     /**
      * will delete all data from database
-     *
      */
     public void clear() throws DataAccessException {
         String sql = "DELETE FROM User";
@@ -213,8 +213,6 @@ public class UserDao {
         }
 
     }
-
-
 
 
 }

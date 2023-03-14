@@ -23,21 +23,12 @@ public class RegisterService {
 
     Database db = new Database();
 
-    //do I need to place this dabatase in the functions?
-
-    //from the specs
-    //    Creates a new user account (user row in the database)
-    //    Generates 4 generations of ancestor data for the new user (just like the /fill endpoint if called with a generations value of 4 and this new user’s username as parameters)
-    //    Logs the user in
-    //    Returns an authtoken
 
     /**
-     *
      * @param regReq request object constaining info for the service to perform function with
      * @return RegisterResult object containing info on whether or not the service was succesfull
      * @throws DataAccessException
      */
-
 
 
     public RegisterResult register(RegisterRequest regReq) throws DataAccessException {
@@ -48,7 +39,7 @@ public class RegisterService {
 
         UserDao userDataAccess = new UserDao(conn);
 
-        if(userDataAccess.findUsername(regReq.getUsername())!=null){
+        if (userDataAccess.findUsername(regReq.getUsername()) != null) {
 
             db.closeConnection(false);
             RegisterResult returnResult = new RegisterResult();
@@ -59,13 +50,10 @@ public class RegisterService {
         }
 
 
-
         User registerUser = createUser(regReq);
 
 
-
-        try{
-
+        try {
 
 
             PersonDao dataAccessPerson = new PersonDao(db.getConnection());
@@ -74,7 +62,7 @@ public class RegisterService {
 
             // insert the new authToken for the user into the database
 
-            String uniqueTokenString = UUID. randomUUID().toString();
+            String uniqueTokenString = UUID.randomUUID().toString();
 
             RegisterResult returnResult = new RegisterResult();
 
@@ -88,7 +76,7 @@ public class RegisterService {
 
             authTokenDataAccess.insert(newAuthTokenObject);
 
-            System.out.println("The authToken to test with is...DELETE THIS CODE..."+uniqueTokenString); //DELETE ME!!!
+            System.out.println("The authToken to test with is...DELETE THIS CODE..." + uniqueTokenString); //DELETE ME!!!
 
             returnResult.setUsername(registerUser.getUsername());
 
@@ -115,7 +103,7 @@ public class RegisterService {
             returnResult.setMessage("Error trying to register the user");
             returnResult.setSuccess(false);
             throw new RuntimeException(e);
-        } catch(Exception ex){
+        } catch (Exception ex) {
 
             ex.printStackTrace();
             db.closeConnection(false);
@@ -127,7 +115,7 @@ public class RegisterService {
     }
 
 
-    private User createUser(RegisterRequest regReq){
+    private User createUser(RegisterRequest regReq) {
 
         String newPersonID = UUID.randomUUID().toString();
 
@@ -135,12 +123,9 @@ public class RegisterService {
 
         User registerUser = new User(regReq.getUsername(), regReq.getPassword(), regReq.getEmail(), regReq.getFirstName(), regReq.getLastName(), regReq.getGender(), newPersonID);
 
-        return  registerUser;
+        return registerUser;
 
     }
-
-
-
 
 
 }

@@ -19,16 +19,10 @@ public class PersonHandler extends HandlerBase implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-        // exchange.getRequestURI().toString(); this will give the info from the URL
-        //Split method on a String object and it will split the String into an array. Can give it / and seperate as needed
-
-
-
 
         boolean success = false;
 
         try {
-
 
 
             if (exchange.getRequestMethod().equalsIgnoreCase("get")) {
@@ -41,20 +35,12 @@ public class PersonHandler extends HandlerBase implements HttpHandler {
                     // Extract the auth token from the "Authorization" header
                     String authToken = reqHeaders.getFirst("Authorization");
 
-                    // Verify that the auth token is the one we're looking for
-                    // (this is not realistic, because clients will use different
-                    // auth tokens over time, not the same one all the time).
-                    // if (authToken.equals("afj232hj2332")) { // I don't need this correct?
-
-                    // Extract the JSON string from the HTTP request body
 
                     // Get the request body input stream
                     InputStream reqBody = exchange.getRequestBody();
 
                     // Read JSON string from the input stream
                     String reqData = readString(reqBody);
-
-
 
 
                     // Display/log the request JSON data
@@ -69,7 +55,7 @@ public class PersonHandler extends HandlerBase implements HttpHandler {
                     //send the appropriate type of header.
 
 
-                    PersonResult  result = service.GetAllPersons(authToken);
+                    PersonResult result = service.GetAllPersons(authToken);
 
                     if (result.getSuccess()) {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
@@ -77,13 +63,6 @@ public class PersonHandler extends HandlerBase implements HttpHandler {
                         // If the result is not successful, send HTTP_BAD_REQUEST
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                     }
-
-                    // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
-                    //if yes, then it will send back a result object with an Auth token
-
-                    // service.login(request);
-
-                    //exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 
                     OutputStream resBody = exchange.getResponseBody();
 
@@ -96,8 +75,7 @@ public class PersonHandler extends HandlerBase implements HttpHandler {
                 }
             }
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // Some kind of internal error has occurred inside the server (not the
             // client's fault), so we return an "internal server error" status code
             // to the client.

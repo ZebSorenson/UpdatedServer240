@@ -18,9 +18,6 @@ public class PersonIDHandler extends HandlerBase implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-        // exchange.getRequestURI().toString(); this will give the info from the URL
-        //Split method on a String object and it will split the String into an array. Can give it / and seperate as needed
-
 
         try {
 
@@ -28,13 +25,13 @@ public class PersonIDHandler extends HandlerBase implements HttpHandler {
             URI uri = exchange.getRequestURI();
             String uriString = uri.toString();
 
-// split the URI into its constituent parts
+            // split the URI into its constituent parts
             String[] parts = uriString.split("/");
 
-// extract the person ID from the URI
+            // extract the person ID from the URI
             String personId = parts[2];
 
-// extract the "person" part of the URI
+            // extract the "person" part of the URI
             String person = parts[1];
 
 
@@ -79,12 +76,6 @@ public class PersonIDHandler extends HandlerBase implements HttpHandler {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                     }
 
-                    // THIS IS TAKING CARE OF 1. going to service class which will use the dao classes to check if user exists, then
-                    //if yes, then it will send back a result object with an Auth token
-
-                    // service.login(request);
-
-                   // exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 
                     OutputStream resBody = exchange.getResponseBody();
 
@@ -98,8 +89,7 @@ public class PersonIDHandler extends HandlerBase implements HttpHandler {
                 }
             }
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // Some kind of internal error has occurred inside the server (not the
             // client's fault), so we return an "internal server error" status code
             // to the client.
