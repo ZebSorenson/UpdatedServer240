@@ -6,13 +6,10 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dao.DataAccessException;
-import service.PersonIDService;
 import service.PersonService;
-import service.RegisterService;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.URI;
 
 
 public class PersonHandler extends HandlerBase implements HttpHandler {

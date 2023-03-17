@@ -7,7 +7,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dao.DataAccessException;
 import service.LoadService;
-import service.RegisterService;
 
 import java.io.*;
 import java.net.HttpURLConnection;

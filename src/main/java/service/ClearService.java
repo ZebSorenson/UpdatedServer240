@@ -5,7 +5,6 @@ import RequestResult.ClearResult;
 import dao.*;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 
 /**

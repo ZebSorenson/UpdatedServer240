@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import service.ClearService;
 import service.EventService;
 import service.RegisterService;
-import java.sql.SQLException;
 
 public class AllEventsServiceTest {
 
